@@ -8,12 +8,11 @@ export default function CustomCursor() {
   const [hidden, setHidden] = useState(false);
   const cursorX = useMotionValue(0);
   const cursorY = useMotionValue(0);
-  const springX = useSpring(cursorX, { damping: 25, stiffness: 250 });
-  const springY = useSpring(cursorY, { damping: 25, stiffness: 250 });
+  const springX = useSpring(cursorX, { damping: 20, stiffness: 200 });
+  const springY = useSpring(cursorY, { damping: 20, stiffness: 200 });
   const isTouchRef = useRef(false);
 
   useEffect(() => {
-    // Don't show custom cursor on touch devices
     const checkTouch = () => { isTouchRef.current = true; };
     window.addEventListener("touchstart", checkTouch, { once: true });
 
@@ -50,44 +49,50 @@ export default function CustomCursor() {
 
   return (
     <>
-      {/* Hide default cursor globally */}
       <style jsx global>{`
         @media (pointer: fine) {
           * { cursor: none !important; }
         }
       `}</style>
 
-      {/* Outer ring */}
+      {/* Outer ring — bigger, more visible */}
       <motion.div
-        className="pointer-events-none fixed left-0 top-0 z-[9999] hidden rounded-full border border-[#C9A96E]/30 md:block"
+        className="pointer-events-none fixed left-0 top-0 z-[9999] hidden rounded-full md:block"
         style={{
           x: springX,
           y: springY,
           translateX: "-50%",
           translateY: "-50%",
+          border: "1.5px solid rgba(201,169,110,0.6)",
         }}
         animate={{
-          width: hovered ? 48 : 28,
-          height: hovered ? 48 : 28,
+          width: hovered ? 56 : 36,
+          height: hovered ? 56 : 36,
           opacity: hidden ? 0 : 1,
-          borderColor: hovered ? "rgba(201,169,110,0.5)" : "rgba(201,169,110,0.3)",
+          borderColor: hovered
+            ? "rgba(201,169,110,0.8)"
+            : "rgba(201,169,110,0.6)",
+          boxShadow: hovered
+            ? "0 0 20px 4px rgba(201,169,110,0.15)"
+            : "0 0 10px 2px rgba(201,169,110,0.06)",
         }}
-        transition={{ duration: 0.2 }}
+        transition={{ duration: 0.25 }}
       />
 
-      {/* Inner dot */}
+      {/* Inner dot — larger, fully opaque */}
       <motion.div
-        className="pointer-events-none fixed left-0 top-0 z-[9999] hidden rounded-full bg-[#C9A96E] md:block"
+        className="pointer-events-none fixed left-0 top-0 z-[9999] hidden rounded-full md:block"
         style={{
           x: cursorX,
           y: cursorY,
           translateX: "-50%",
           translateY: "-50%",
+          backgroundColor: "#C9A96E",
         }}
         animate={{
-          width: hovered ? 6 : 4,
-          height: hovered ? 6 : 4,
-          opacity: hidden ? 0 : 0.7,
+          width: hovered ? 8 : 5,
+          height: hovered ? 8 : 5,
+          opacity: hidden ? 0 : 1,
         }}
         transition={{ duration: 0.15 }}
       />
