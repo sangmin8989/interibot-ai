@@ -76,9 +76,45 @@ export default function HviPage() {
             </p>
           </FadeIn>
 
-          <FadeIn delay={0.2} className="mt-10">
-            <button onClick={() => formRef.current?.scrollIntoView({ behavior: "smooth" })} className="border-b border-[#1A1A1A]/15 pb-0.5 text-[12px] text-[#1A1A1A]/30 transition hover:border-[#1A1A1A] hover:text-[#1A1A1A]">
-              분석하기 ↓
+          {/* Demo card */}
+          <FadeIn delay={0.2} className="mt-12 max-w-md">
+            <div className="overflow-hidden border border-[#1A1A1A]/[0.06] bg-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.06)]">
+              <div className="border-b border-[#1A1A1A]/[0.04] px-6 py-4">
+                <p className="text-[10px] tracking-[0.3em] text-[#1A1A1A]/40">SAMPLE</p>
+              </div>
+              <div className="px-6 py-5">
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="text-center">
+                    <p className="text-[9px] text-[#1A1A1A]/30">HVI</p>
+                    <p className="mt-1 font-serif text-xl font-light text-[#C9A96E]">+{formatWon(DEMO_HVI.hvi)}</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-[9px] text-[#1A1A1A]/30">ROI</p>
+                    <p className="mt-1 font-serif text-xl font-light text-[#1A1A1A]">{DEMO_HVI.roi}%</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-[9px] text-[#1A1A1A]/30">LII</p>
+                    <p className="mt-1 font-serif text-xl font-light text-[#1A1A1A]">{DEMO_HVI.lii}등급</p>
+                  </div>
+                </div>
+                <div className="mt-5 space-y-2.5">
+                  {DEMO_HVI.processRoi.slice(0, 4).map((p) => (
+                    <div key={p.name} className="flex items-center gap-3">
+                      <span className="w-10 text-[11px] text-[#1A1A1A]/40">{p.name}</span>
+                      <div className="h-[2px] flex-1 bg-[#1A1A1A]/[0.04]">
+                        <div className="h-full bg-[#C9A96E]/50" style={{ width: `${p.roi}%` }} />
+                      </div>
+                      <span className="font-mono text-[10px] text-[#1A1A1A]/30">{p.roi}%</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={0.4} className="mt-10">
+            <button onClick={() => formRef.current?.scrollIntoView({ behavior: "smooth" })} className="border-b border-[#1A1A1A]/15 pb-0.5 text-[12px] text-[#1A1A1A]/40 transition hover:border-[#1A1A1A] hover:text-[#1A1A1A]">
+              내 견적도 분석하기 ↓
             </button>
           </FadeIn>
         </div>
