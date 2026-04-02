@@ -102,15 +102,15 @@ export default function HeroSection() {
               transition={{ delay: 0.2, duration: 1, ease }}
               className="text-[10px] tracking-[0.5em] text-[#C9A96E]"
             >
-              INFORMED DECISIONS
+              INTERIBOT AI
             </motion.p>
 
             <h1 className="mt-8 font-serif">
-              <span className="block text-[clamp(2rem,4.5vw,3.5rem)] font-extralight leading-[1.15] tracking-tight text-black">
-                <SplitText delay={0.4}>인테리어에도</SplitText>
+              <span className="block text-[clamp(2.5rem,5.5vw,4.5rem)] font-extralight leading-[1.1] tracking-tight text-black">
+                <SplitText delay={0.4}>인테리어의</SplitText>
               </span>
-              <span className="block text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.15] tracking-tight text-black">
-                <SplitText delay={0.7}>안목이 필요합니다.</SplitText>
+              <span className="block text-[clamp(2.5rem,5.5vw,4.5rem)] font-bold leading-[1.1] tracking-tight text-black">
+                <SplitText delay={0.7}>모든 답.</SplitText>
               </span>
             </h1>
 
@@ -118,7 +118,7 @@ export default function HeroSection() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.4, duration: 1, ease }}
-              className="mt-8 max-w-sm text-[14px] leading-[2] text-black/35"
+              className="mt-10 max-w-sm text-[14px] leading-[2] text-black/35"
             >
               121,515건의 시장 데이터가 만든 기준.
               <br />견적서를 읽는 눈을 드립니다.

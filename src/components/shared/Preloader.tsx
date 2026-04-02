@@ -55,7 +55,7 @@ export default function Preloader() {
             transition={{ delay: 1.6, duration: 0.6, ease }}
             className="mt-3 text-[9px] tracking-[0.5em] text-black/25"
           >
-            INFORMED DECISIONS
+            인테리어의 모든 답
           </motion.p>
         </motion.div>
       )}
