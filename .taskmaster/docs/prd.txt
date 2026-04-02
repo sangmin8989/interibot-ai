@@ -1,0 +1,354 @@
+# 인테리봇 AI — Product Requirements Document (PRD)
+
+## 1. Project Overview
+
+### Product Name
+인테리봇 AI (Interibot AI)
+
+### Description
+한국 아파트 인테리어 리모델링 소비자를 위한 AI 포탈 웹앱. 성향분석, 견적서 감사, 집값 분석(HVI/ROI), AI 상담 4개 핵심 기능을 제공하며, 소비자가 업로드하는 견적서+도면 데이터를 수집하여 향후 AI 견적 엔진을 완성하는 데이터 플라이휠 구조.
+
+### Mission
+인테리어 전문가만 알던 지식을 AI로 모든 소비자에게 제공하여, 처음부터 똑똑한 판단을 내릴 수 있게 한다.
+
+### Tech Stack
+- **Frontend:** Next.js 15 (App Router) + TailwindCSS + shadcn/ui
+- **AI:** Vercel AI SDK + Google Gemini 2.5 Flash/Pro
+- **Backend:** Next.js API Routes (app/api/)
+- **Database:** Supabase (PostgreSQL) — 기존 DB 연결 (project: harveviketbeljkgdihi)
+- **Validation:** Zod
+- **Deployment:** Vercel
+- **Development:** VS Code + Claude Code + Task Master AI
+
+### Target Users
+한국 아파트 인테리어 리모델링을 준비하는 소비자 (30~50대, 서울/경기 중심)
+
+---
+
+## 2. Architecture
+
+### Page Structure
+```
+/ (홈페이지 포탈 — 서비스 소개 + 기능 카드 진입)
+/intevity (성향분석 — 15축 대화형 질문 → 프로파일)
+/audit (견적서 감사 — 견적서+도면 업로드 → 분석 리포트)
+/hvi (집값 분석 — 견적서 기반 HVI/ROI/LII)
+/chat (AI 상담 — 채팅 UI, 인테리어 전반 질문)
+```
+
+### Directory Structure
+```
+interibot-ai/
+├── src/
+│   ├── app/
+│   │   ├── page.tsx                    ← 홈페이지 포탈
+│   │   ├── layout.tsx                  ← 전역 레이아웃 + 네비게이션
+│   │   ├── intevity/
+│   │   │   └── page.tsx                ← 성향분석
+│   │   ├── audit/
+│   │   │   └── page.tsx                ← 견적서 감사 + 도면 업로드
+│   │   ├── hvi/
+│   │   │   └── page.tsx                ← 집값 분석
+│   │   ├── chat/
+│   │   │   └── page.tsx                ← AI 상담
+│   │   └── api/
+│   │       ├── chat/route.ts           ← AI 상담 API
+│   │       ├── audit/route.ts          ← 견적서 감사 API
+│   │       ├── hvi/route.ts            ← 집값 분석 API
+│   │       ├── intevity/route.ts       ← 성향분석 API
+│   │       └── upload/route.ts         ← 파일 업로드 + DB 적재
+│   ├── components/
+│   │   ├── layout/
+│   │   │   ├── Navbar.tsx              ← 네비게이션 바
+│   │   │   ├── Footer.tsx              ← 푸터
+│   │   │   └── HeroSection.tsx         ← 히어로 섹션
+│   │   ├── home/
+│   │   │   ├── FeatureCard.tsx         ← 기능 카드
+│   │   │   ├── DataTrust.tsx           ← 데이터 신뢰 섹션
+│   │   │   └── SampleReport.tsx        ← 샘플 리포트 미리보기
+│   │   ├── intevity/
+│   │   │   ├── QuestionCard.tsx        ← 성향 질문 카드
+│   │   │   ├── ProgressBar.tsx         ← 진행률
+│   │   │   ├── ProfileResult.tsx       ← 결과 프로파일
+│   │   │   └── StyleMatch.tsx          ← 스타일 매칭 결과
+│   │   ├── audit/
+│   │   │   ├── FileUpload.tsx          ← 견적서/도면 업로드
+│   │   │   ├── AuditReport.tsx         ← 감사 리포트 메인
+│   │   │   ├── ProcessTable.tsx        ← 공정별 비교표
+│   │   │   ├── PercentileChart.tsx     ← 백분위 차트
+│   │   │   ├── MissingAlert.tsx        ← 누락 공정 경고
+│   │   │   └── RiskBadge.tsx           ← PASS/WARN/BLOCK 뱃지
+│   │   ├── hvi/
+│   │   │   ├── HviResult.tsx           ← HVI/ROI/LII 결과
+│   │   │   ├── ValueChart.tsx          ← 집값 변화 차트
+│   │   │   └── ProcessRoi.tsx          ← 공정별 ROI
+│   │   ├── chat/
+│   │   │   ├── ChatUI.tsx              ← 채팅 인터페이스
+│   │   │   ├── MessageBubble.tsx       ← 메시지 버블
+│   │   │   └── SourceBadge.tsx         ← 출처 뱃지
+│   │   └── shared/
+│   │       ├── LoadingSpinner.tsx
+│   │       └── StatusIcon.tsx
+│   ├── lib/
+│   │   ├── supabase/
+│   │   │   ├── client.ts              ← Supabase 클라이언트
+│   │   │   └── queries.ts             ← DB 쿼리 함수
+│   │   ├── gemini/
+│   │   │   ├── client.ts              ← Gemini API 클라이언트
+│   │   │   └── ocr.ts                 ← 견적서 OCR 추출
+│   │   ├── engine/
+│   │   │   ├── audit.ts               ← 감사 엔진 (벤치마크 대비 분석)
+│   │   │   ├── hvi.ts                 ← HVI/ROI 계산 엔진
+│   │   │   └── intevity.ts            ← 성향분석 rule-based 엔진
+│   │   ├── schema/
+│   │   │   ├── quote.ts               ← 견적서 추출 Zod 스키마
+│   │   │   ├── profile.ts             ← 성향 프로파일 Zod 스키마
+│   │   │   └── audit-result.ts        ← 감사 결과 Zod 스키마
+│   │   ├── prompts/
+│   │   │   ├── system.ts              ← 마스터 시스템 프롬프트
+│   │   │   ├── ocr.ts                 ← OCR 전용 프롬프트
+│   │   │   └── chat.ts                ← 상담 프롬프트
+│   │   └── data/
+│   │       ├── intevity-questions.ts   ← T01~T15 질문 데이터
+│   │       ├── style-mapping.ts        ← 6가지 스타일 매칭 규칙
+│   │       └── process-weights.ts      ← 성향→공정 가중치 규칙
+│   └── types/
+│       └── index.ts                    ← 공통 타입 정의
+├── public/
+│   └── images/
+├── .env.local                          ← Supabase + Gemini API 키
+├── next.config.ts
+├── tailwind.config.ts
+├── tsconfig.json
+└── package.json
+```
+
+### Existing Database (DO NOT CREATE — connect to existing)
+Supabase project ID: `harveviketbeljkgdihi`
+
+Key tables:
+- `v4_item_prices` — 121,515 records (시장 단가 데이터)
+- `v4_market_cases` — 450 records (시공 사례)
+- `v4_process_benchmarks` — 66 records (공정별 P25/P50/P75, 박목수 기준)
+- `v4_standard_quantities` — 66 records (평형별 표준 물량)
+- `v4_engine_reference` — 45 records (기능공 일당, 간접비 등)
+- `v4_knowledge_base` — 9,610 records (인테리어 지식)
+- `v4_audit_rules` — 15 records (감사 규칙)
+
+Key RPC functions:
+- `estimate_by_area_v2()` — 아파트+올수리 필터 견적
+- `get_process_items_v2()` — 품목별 상세 (V2 필수, V1 금지)
+- `audit_get_percentile()` — 퍼센타일 계산
+
+### New Table Needed
+```sql
+CREATE TABLE uploaded_documents (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  session_id text,
+  document_type text NOT NULL, -- 'estimate' | 'floorplan'
+  file_url text,
+  file_name text,
+  file_size integer,
+  extracted_data jsonb, -- Gemini OCR 추출 결과
+  apartment_name text,
+  area_py numeric,
+  region text,
+  processed boolean DEFAULT false,
+  created_at timestamptz DEFAULT now()
+);
+```
+
+---
+
+## 3. Features
+
+### Feature 1: 홈페이지 포탈 (/)
+
+**Purpose:** 서비스 소개 + 4개 기능으로 진입하는 허브
+
+**Sections:**
+1. **히어로** — "인테리어, 전문가 없이도 똑똑하게" + CTA 2개 (성향분석 시작 / 견적서 분석)
+2. **기능 카드 4개** — 성향분석, 견적서 감사, 집값 분석, AI 상담. 각각 아이콘 + 설명 + CTA 버튼
+3. **"견적서 올리면 이런 걸 알 수 있어요"** — 샘플 리포트 미리보기 (스크린샷 or 목업)
+4. **데이터 신뢰** — "12만건 시장 데이터 | 450건 시공 사례 | 출처 기반 판단"
+5. **푸터** — 아르젠 스튜디오 정보, 연락처, 이용약관/개인정보
+
+**Design Reference:** 아키스케치 홈페이지 스타일 (깔끔, 기능 중심, 카드 레이아웃)
+
+---
+
+### Feature 2: 성향분석 (/intevity)
+
+**Purpose:** 15축 질문으로 사용자 인테리어 성향 프로파일 생성
+
+**15 Axes (T01~T15):**
+T01 공간감각, T02 시각·청각 민감도, T03 청소 성향, T04 정리정돈, T05 가족 구성, T06 건강 요소, T07 예산 감각, T08 색감 취향, T09 조명 취향, T10 집 사용 목적, T11 불편 요소, T12 활동 동선, T13 생활 루틴, T14 수면 패턴, T15 취미·라이프스타일
+
+**Flow:**
+1. 질문 카드 1개씩 표시 (총 15개)
+2. 각 질문에 3~4개 선택지 (탭 가능)
+3. 상단 진행률 표시 (1/15, 2/15...)
+4. 완료 시 결과 페이지:
+   - 나의 인테리어 성향 프로파일 (레이더 차트)
+   - 매칭된 스타일 (6가지 중 1~2개)
+   - 공간 우선순위 (어디에 돈을 써야 하는지)
+   - 추천 공정 목록 (필수/권장/선택)
+   - "견적서 분석하러 가기" CTA
+
+**Implementation:**
+- Rule-based 스코어링 (LLM 호출 없음)
+- 질문 데이터: `intevity-questions.ts`에 하드코딩
+- 결과 계산: `lib/engine/intevity.ts`
+- 성향→공정 가중치 규칙: T05≥60→붙박이장 추천, T03≥70→방음 추천 등
+
+**Source:** 기존 interibot_v16cs의 성향분석 로직 이식 (GPT→rule-based로 전환)
+
+---
+
+### Feature 3: 견적서 감사 (/audit)
+
+**Purpose:** 소비자가 받은 견적서를 업로드하면 시장 데이터 대비 분석
+
+**Upload:**
+- 견적서 (필수): 이미지(JPG/PNG), PDF, 엑셀(XLSX)
+- 도면 (선택): 이미지(JPG/PNG), PDF
+- 아파트 정보 입력: 평수, 아파트명(선택), 지역(선택)
+- 드래그&드롭 + 클릭 업로드
+
+**Processing Pipeline:**
+1. **파일 분기** — 엑셀→SheetJS 직접 파싱 / PDF텍스트→pdf-parse / 이미지→Gemini Vision OCR
+2. **OCR 추출** — Gemini Vision으로 {공정명, 금액, 자재명} 구조화 추출 (Zod 강제)
+3. **도면 분석** (업로드 시) — Gemini Vision으로 면적/치수 추출
+4. **벤치마크 비교** — `v4_process_benchmarks` 테이블의 P25/P50/P75 대비 각 공정 위치
+5. **누락 공정 탐지** — 표준 공정 체크리스트 대비 빠진 공정 식별
+6. **리스크 판정** — PASS (P25~P75) / WARN (P75~P90) / BLOCK (P90 이상 또는 누락)
+7. **데이터 저장** — 추출된 견적 데이터를 `uploaded_documents`에 적재
+
+**Output — 감사 리포트:**
+- 전체 판정 (PASS/WARN/BLOCK)
+- 공정별 비교표 (내 견적 vs 시장 P25/P50/P75) — 테이블 + 바 차트
+- 누락 공정 경고 (빨간색 알림)
+- 항목별 백분위 위치 (시각적 게이지)
+- 모든 판단에 출처 표시 ("박목수 66건 기준", "시장 450건 기준")
+- "집값 분석도 보기" CTA → /hvi로 연결
+
+**Critical Rules:**
+- "비싸다", "바가지" 등 주관적 표현 절대 금지
+- 백분위 + 출처만으로 표현: "이 항목은 시장 상위 15%에 위치합니다 (450건 기준)"
+- 불확실하면 "이 항목은 비교 데이터가 부족하여 판단을 유보합니다"
+- Zod 없이 AI 출력을 사용자에게 보여주지 않음
+
+---
+
+### Feature 4: 집값 분석 (/hvi)
+
+**Purpose:** 견적서 기반으로 리모델링 후 예상 집값 상승 분석
+
+**Input:**
+- /audit에서 넘어온 견적 데이터 (공정별 금액)
+- 또는 직접 아파트 정보 입력 (아파트명 + 평수)
+
+**HVI (Home Value Index) Engine:**
+- 국토부 실거래가 API에서 동일 단지 거래 이력 조회
+- 리모델링 전후 가격차 추정 (동일 단지 내 올수리 매물 vs 미수리 매물)
+- 공정별 ROI 계산 (주방 70~80%, 욕실 60~70%, 도배 30~40% 등)
+
+**Output:**
+- 예상 집값 상승액 (HVI)
+- 투자 회수율 (ROI) — "이 공사비 대비 집값 상승 기대: XX%"
+- 생활 개선 지수 (LII)
+- 공정별 ROI 차트 (어떤 공정이 집값에 가장 효과적인지)
+- "우선 투자 공정" 추천
+
+**Source:** 기존 interibot_v16cs의 HVI 2.1 / ROI 2.1 / LII 엔진 이식
+
+---
+
+### Feature 5: AI 상담 (/chat)
+
+**Purpose:** 인테리어 전반에 대한 자유 질문 답변
+
+**Implementation:**
+- Vercel AI SDK useChat 기반 채팅 UI
+- Gemini 2.5 Flash 모델
+- 시스템 프롬프트: 인테리어 전문 AI 상담사
+- RAG: `v4_knowledge_base` 9,610건 검색
+- Tool calling: 견적 조회, 자재 비교, 공정 설명
+
+**Features:**
+- 스트리밍 응답
+- 모든 답변에 출처 표시
+- 추천 질문 칩 ("32평 올수리 보통 얼마야?", "타일 브랜드 추천해줘" 등)
+- 파일 업로드 → 감사 파이프라인 연결
+
+---
+
+### Feature 6: 데이터 수집 파이프라인
+
+**Purpose:** 업로드된 견적서+도면을 정제하여 DB에 적재, 향후 견적 엔진 완성
+
+**Flow:**
+1. 사용자가 견적서/도면 업로드 (/audit)
+2. Gemini OCR로 구조화 추출
+3. `uploaded_documents` 테이블에 원본+추출 데이터 저장
+4. 백그라운드에서 품질 검증 후 `v4_market_cases`, `v4_item_prices`에 적재
+5. 도면 데이터는 면적/물량 정보 추출 → `v4_standard_quantities` 보강
+
+**Goal:** 현재 450건 → 1,000건 → 5,000건 → 견적 엔진 90% 정확도 달성
+
+---
+
+## 4. Design Principles
+
+### UI/UX
+- 아키스케치 홈페이지 스타일 벤치마킹 (깔끔, 기능 중심)
+- 모바일 퍼스트 (아파트 리모델링 소비자 대부분 모바일)
+- 각 기능별 독립 페이지 (채팅창이 아닌 폼+결과 UI)
+- 색상: 오렌지 포인트 (#D4764B) + 뉴트럴
+
+### Data & Trust
+- 모든 숫자에 출처 명시
+- 주관적 표현 금지 (백분위 + 출처만)
+- 불확실하면 판단 유보
+- Zod 없이 AI 출력을 사용자에게 보여주지 않음
+
+### Technical
+- 프론트에 비즈니스 로직 금지
+- Source of Truth = Supabase DB
+- sharp 사용 금지 (Vercel 50MB 제한)
+- get_process_items_v2 사용 (V1 금지 — 인건비 데이터 오염)
+
+---
+
+## 5. Korean Interior Domain Knowledge
+
+### Process Names (17 standard processes)
+철거공사, 목공사, 전기공사, 설비공사, 타일공사, 도장공사, 도배공사, 바닥공사, 필름공사, 창호공사, 도어공사, 도기공사, 수전공사, 가구공사, 확장공사, 조명공사, 기타공사
+
+### Benchmark Reference (32평 올수리, 창호포함, 확장미포함)
+- P25 (가성비): 직접공사비 3,408만원
+- P50 (균형): 직접공사비 3,914만원
+- P75 (프리미엄): 직접공사비 5,911만원
+- 간접비: 산재보험 3.7%(노무비), 고용보험 1.5%(노무비), 공과잡비 3%(직접), 공사감리 5%(직접)
+- VAT: 10% 별도
+
+### Skilled Worker Daily Rates (아르젠 실측 기준)
+목수 380,000 / 타일공 350,000 / 전기공 330,000 / 도배공 300,000 / 도장공 300,000 / 설비공 300,000 / 필름공 280,000 / 샤시공 280,000 / 바닥공 280,000 / 철거공 250,000 / 보통인부 170,000
+
+---
+
+## 6. Environment Variables
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+GEMINI_API_KEY=
+```
+
+---
+
+## 7. Success Metrics
+- 성향분석 완료율 > 60%
+- 견적서 업로드 수 > 100건/월 (데이터 수집)
+- 도면 업로드 비율 > 30% (견적서 업로드 대비)
+- AI 상담 세션 > 500건/월

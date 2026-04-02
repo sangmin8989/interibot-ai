@@ -1,0 +1,195 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": "1",
+        "title": "Next.js 15 프로젝트 초기 설정",
+        "description": "Next.js 15 App Router 기반 프로젝트를 초기화하고 TailwindCSS, shadcn/ui, TypeScript 등 필수 패키지를 설치 및 구성합니다.",
+        "details": "1. `npx create-next-app@latest interibot-ai --typescript --tailwind --eslint --app --src-dir` 실행\n2. PRD에 명시된 디렉토리 구조 생성:\n   - src/app/ (페이지 라우트)\n   - src/components/ (layout, home, intevity, audit, hvi, chat, shared)\n   - src/lib/ (supabase, gemini, engine, schema, prompts, data)\n   - src/types/\n3. shadcn/ui 초기화: `npx shadcn@latest init`\n4. 필수 의존성 설치:\n   - @supabase/supabase-js\n   - ai (Vercel AI SDK)\n   - @google/generative-ai\n   - zod\n   - xlsx (SheetJS)\n   - pdf-parse\n   - recharts (차트)\n5. 환경변수 파일(.env.local) 템플릿 생성\n6. tailwind.config.ts에 오렌지 포인트 색상(#D4764B) 추가\n7. tsconfig.json 경로 별칭 설정 (@/)",
+        "testStrategy": "1. `npm run dev` 실행 후 localhost:3000 접속 확인\n2. TailwindCSS 스타일 적용 확인\n3. shadcn/ui 버튼 컴포넌트 임포트 테스트\n4. 환경변수 로드 확인",
+        "priority": "high",
+        "dependencies": [],
+        "status": "in-progress",
+        "subtasks": [],
+        "updatedAt": "2026-04-02T15:49:53.369Z"
+      },
+      {
+        "id": "2",
+        "title": "Supabase 클라이언트 및 타입 설정",
+        "description": "기존 Supabase 프로젝트(harveviketbeljkgdihi)에 연결하고, 필요한 쿼리 함수와 TypeScript 타입을 설정합니다.",
+        "details": "1. src/lib/supabase/client.ts 생성:\n   - createClient() 함수 (브라우저용)\n   - createServerClient() 함수 (서버용, cookies 사용)\n2. Supabase CLI로 기존 DB 타입 생성:\n   - `npx supabase gen types typescript --project-id harveviketbeljkgdihi > src/types/database.types.ts`\n3. src/lib/supabase/queries.ts 생성:\n   - getProcessBenchmarks(): v4_process_benchmarks 조회\n   - getStandardQuantities(area: number): v4_standard_quantities 조회\n   - getKnowledgeBase(query: string): v4_knowledge_base 벡터 검색\n   - estimateByAreaV2(): estimate_by_area_v2 RPC 호출\n   - getProcessItemsV2(): get_process_items_v2 RPC 호출 (V1 금지)\n   - auditGetPercentile(): audit_get_percentile RPC 호출\n4. uploaded_documents 테이블 생성 SQL 실행:\n   ```sql\n   CREATE TABLE uploaded_documents (\n     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,\n     session_id text,\n     document_type text NOT NULL,\n     file_url text,\n     file_name text,\n     file_size integer,\n     extracted_data jsonb,\n     apartment_name text,\n     area_py numeric,\n     region text,\n     processed boolean DEFAULT false,\n     created_at timestamptz DEFAULT now()\n   );\n   ```\n5. src/types/index.ts에 공통 타입 정의",
+        "testStrategy": "1. Supabase 연결 테스트: v4_process_benchmarks에서 66건 조회 확인\n2. RPC 함수 호출 테스트: estimate_by_area_v2 정상 응답 확인\n3. TypeScript 타입 정합성 검증",
+        "priority": "high",
+        "dependencies": [
+          "1"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "3",
+        "title": "Zod 스키마 및 타입 정의",
+        "description": "견적서 OCR 추출, 성향 프로파일, 감사 결과 등 핵심 데이터의 Zod 스키마를 정의합니다.",
+        "details": "1. src/lib/schema/quote.ts - 견적서 추출 스키마:\n   ```typescript\n   export const QuoteItemSchema = z.object({\n     processName: z.string(), // 공정명 (17개 표준 공정 중 하나)\n     amount: z.number(), // 금액\n     materialName: z.string().optional(), // 자재명\n     quantity: z.number().optional(),\n     unitPrice: z.number().optional(),\n   });\n   export const ExtractedQuoteSchema = z.object({\n     items: z.array(QuoteItemSchema),\n     totalAmount: z.number(),\n     apartmentName: z.string().optional(),\n     area: z.number().optional(),\n   });\n   ```\n2. src/lib/schema/profile.ts - 성향 프로파일 스키마:\n   ```typescript\n   export const ProfileScoreSchema = z.object({\n     T01_space: z.number().min(0).max(100),\n     T02_sensitivity: z.number().min(0).max(100),\n     // ... T03~T15 모두 정의\n   });\n   export const StyleMatchSchema = z.object({\n     primaryStyle: z.enum(['모던', '내추럴', '클래식', '미니멀', '스칸디', '빈티지']),\n     secondaryStyle: z.enum([...]).optional(),\n     recommendedProcesses: z.array(z.string()),\n   });\n   ```\n3. src/lib/schema/audit-result.ts - 감사 결과 스키마:\n   ```typescript\n   export const AuditItemSchema = z.object({\n     processName: z.string(),\n     userAmount: z.number(),\n     p25: z.number(),\n     p50: z.number(),\n     p75: z.number(),\n     percentile: z.number(),\n     verdict: z.enum(['PASS', 'WARN', 'BLOCK']),\n     source: z.string(), // 출처 (\"박목수 66건 기준\")\n   });\n   ```",
+        "testStrategy": "1. 각 스키마에 대한 유효한 데이터 파싱 테스트\n2. 잘못된 데이터 입력 시 Zod 에러 발생 확인\n3. 타입 추론 정확성 검증",
+        "priority": "high",
+        "dependencies": [
+          "1"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "4",
+        "title": "레이아웃 및 홈페이지 포탈 구현",
+        "description": "전역 레이아웃(Navbar, Footer)과 홈페이지 포탈 페이지를 구현합니다. 4개 기능 카드, 히어로 섹션, 데이터 신뢰 섹션 포함.",
+        "details": "1. src/app/layout.tsx - 전역 레이아웃:\n   - HTML lang=\"ko\" 설정\n   - Navbar 컴포넌트 포함\n   - 메타데이터 설정 (인테리봇 AI)\n2. src/components/layout/Navbar.tsx:\n   - 로고 + 4개 기능 메뉴 링크 (성향분석, 견적서 감사, 집값 분석, AI 상담)\n   - 모바일 반응형 햄버거 메뉴\n3. src/components/layout/Footer.tsx:\n   - 아르젠 스튜디오 정보, 연락처\n   - 이용약관, 개인정보처리방침 링크\n4. src/components/layout/HeroSection.tsx:\n   - 헤드라인: \"인테리어, 전문가 없이도 똑똑하게\"\n   - CTA 버튼 2개: 성향분석 시작, 견적서 분석\n   - 오렌지 포인트 색상 사용\n5. src/components/home/FeatureCard.tsx:\n   - 아이콘, 제목, 설명, CTA 버튼\n   - 4개 기능별 카드 렌더링\n6. src/components/home/DataTrust.tsx:\n   - \"12만건 시장 데이터 | 450건 시공 사례 | 출처 기반 판단\"\n7. src/components/home/SampleReport.tsx:\n   - 감사 리포트 미리보기 (목업 이미지 또는 스켈레톤)\n8. src/app/page.tsx - 홈페이지 조합",
+        "testStrategy": "1. 각 페이지 라우트 접근 테스트 (/, /intevity, /audit, /hvi, /chat)\n2. 모바일 반응형 레이아웃 확인 (375px, 768px, 1280px)\n3. CTA 버튼 클릭 시 올바른 페이지 이동 확인\n4. Lighthouse 접근성 점수 확인",
+        "priority": "high",
+        "dependencies": [
+          "1"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "5",
+        "title": "성향분석 기능 구현 (/intevity)",
+        "description": "15축 질문 기반 성향분석 기능을 구현합니다. Rule-based 스코어링으로 LLM 호출 없이 결과 생성.",
+        "details": "1. src/lib/data/intevity-questions.ts - 15축 질문 데이터:\n   ```typescript\n   export const questions: Question[] = [\n     { id: 'T01', axis: '공간감각', question: '...', options: [...] },\n     // T02~T15 모든 질문 정의\n   ];\n   ```\n2. src/lib/data/style-mapping.ts - 6가지 스타일 매칭 규칙:\n   - 모던, 내추럴, 클래식, 미니멀, 스칸디, 빈티지\n   - 각 축 점수 조합에 따른 스타일 결정 로직\n3. src/lib/data/process-weights.ts - 성향→공정 가중치:\n   - T05≥60 → 붙박이장 추천\n   - T03≥70 → 방음 추천\n   - 기타 매핑 규칙\n4. src/lib/engine/intevity.ts - 성향분석 엔진:\n   - calculateScores(answers): 15축 점수 계산\n   - matchStyle(scores): 스타일 매칭\n   - recommendProcesses(scores): 추천 공정 도출\n5. src/components/intevity/:\n   - QuestionCard.tsx: 질문 + 선택지 표시\n   - ProgressBar.tsx: 1/15, 2/15... 진행률\n   - ProfileResult.tsx: 레이더 차트 + 결과\n   - StyleMatch.tsx: 매칭 스타일 + 설명\n6. src/app/intevity/page.tsx:\n   - useState로 현재 질문, 답변 관리\n   - 완료 시 결과 페이지 렌더링\n   - \"견적서 분석하러 가기\" CTA",
+        "testStrategy": "1. 모든 15개 질문 순차 표시 확인\n2. 각 선택지 탭 시 상태 업데이트 확인\n3. 완료 후 결과 페이지 정상 렌더링\n4. 레이더 차트 데이터 정합성 검증\n5. 스타일 매칭 규칙 일관성 테스트",
+        "priority": "high",
+        "dependencies": [
+          "3",
+          "4"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "6",
+        "title": "파일 업로드 및 OCR 추출 파이프라인 구현",
+        "description": "견적서/도면 업로드 UI와 Gemini Vision OCR을 이용한 데이터 추출 파이프라인을 구현합니다.",
+        "details": "1. src/lib/gemini/client.ts - Gemini API 클라이언트:\n   - Vercel AI SDK의 google provider 사용\n   - gemini-2.5-flash 모델 설정\n2. src/lib/prompts/ocr.ts - OCR 전용 프롬프트:\n   - 견적서에서 {공정명, 금액, 자재명} 추출 지시\n   - 17개 표준 공정명으로 정규화 요청\n   - JSON 출력 강제\n3. src/lib/gemini/ocr.ts - OCR 추출 함수:\n   - extractQuoteFromImage(image): 이미지 → ExtractedQuote\n   - extractQuoteFromPDF(pdf): PDF → ExtractedQuote (pdf-parse 사용)\n   - extractQuoteFromExcel(xlsx): 엑셀 → ExtractedQuote (SheetJS 사용)\n   - extractFloorplanData(image): 도면에서 면적/치수 추출\n   - Zod 스키마로 출력 검증\n4. src/components/audit/FileUpload.tsx:\n   - 드래그&드롭 + 클릭 업로드\n   - 파일 타입 검증 (JPG/PNG/PDF/XLSX)\n   - 업로드 진행률 표시\n   - 견적서(필수) + 도면(선택) 구분\n5. src/app/api/upload/route.ts:\n   - 파일 수신 및 Supabase Storage 업로드\n   - 파일 타입에 따른 분기 처리\n   - OCR 추출 실행\n   - uploaded_documents 테이블에 적재\n6. src/app/api/audit/route.ts - 감사 API:\n   - 추출된 데이터 검증\n   - 에러 시 구조화된 에러 응답",
+        "testStrategy": "1. 각 파일 타입별(JPG, PNG, PDF, XLSX) 업로드 테스트\n2. Gemini OCR 추출 결과 Zod 스키마 통과 확인\n3. 잘못된 파일 타입 업로드 시 에러 처리 확인\n4. 대용량 파일(10MB 이상) 업로드 테스트\n5. uploaded_documents 테이블 데이터 적재 확인",
+        "priority": "high",
+        "dependencies": [
+          "2",
+          "3"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "7",
+        "title": "견적서 감사 엔진 및 리포트 구현 (/audit)",
+        "description": "업로드된 견적서를 시장 데이터(v4_process_benchmarks)와 비교하여 감사 리포트를 생성합니다.",
+        "details": "1. src/lib/engine/audit.ts - 감사 엔진:\n   - compareWithBenchmarks(quote, area): 공정별 P25/P50/P75 대비 위치 계산\n   - detectMissingProcesses(quote): 표준 공정 체크리스트 대비 누락 탐지\n   - calculatePercentile(amount, benchmarks): 백분위 계산\n   - determineVerdict(percentile): PASS(P25~P75)/WARN(P75~P90)/BLOCK(P90+ 또는 누락)\n   - generateAuditReport(quote, area): 종합 감사 리포트 생성\n2. src/components/audit/:\n   - AuditReport.tsx: 감사 리포트 메인 컨테이너\n   - ProcessTable.tsx: 공정별 비교표 (내 견적 vs P25/P50/P75)\n   - PercentileChart.tsx: 백분위 위치 시각적 게이지 (recharts 사용)\n   - MissingAlert.tsx: 누락 공정 경고 (빨간색 알림)\n   - RiskBadge.tsx: PASS/WARN/BLOCK 뱃지\n3. src/app/audit/page.tsx:\n   - FileUpload 컴포넌트\n   - 아파트 정보 입력 폼 (평수, 아파트명, 지역)\n   - 분석 중 로딩 상태\n   - AuditReport 렌더링\n   - \"집값 분석도 보기\" CTA → /hvi 연결\n4. 모든 판단에 출처 표시:\n   - \"박목수 66건 기준\", \"시장 450건 기준\"\n   - 주관적 표현 금지 (\"비싸다\" 등)\n   - 백분위 + 출처만 표현",
+        "testStrategy": "1. 정상 견적서 업로드 후 감사 리포트 생성 확인\n2. 누락 공정 탐지 정확성 테스트\n3. 백분위 계산 정확성 검증 (audit_get_percentile RPC 결과 비교)\n4. PASS/WARN/BLOCK 판정 로직 검증\n5. 출처 표시 일관성 확인",
+        "priority": "high",
+        "dependencies": [
+          "6"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "8",
+        "title": "집값 분석 (HVI/ROI/LII) 엔진 및 페이지 구현 (/hvi)",
+        "description": "견적서 기반 리모델링 후 예상 집값 상승 분석 기능을 구현합니다.",
+        "details": "1. src/lib/engine/hvi.ts - HVI 엔진:\n   - calculateHVI(quote, apartmentInfo): 예상 집값 상승액 계산\n   - calculateROI(quote, hvi): 투자 회수율 계산\n   - calculateLII(quote): 생활 개선 지수 계산\n   - calculateProcessROI(processName, amount): 공정별 ROI 계산\n     - 주방: 70~80%\n     - 욕실: 60~70%\n     - 도배: 30~40%\n   - 국토부 실거래가 API 연동 (동일 단지 거래 이력)\n2. src/components/hvi/:\n   - HviResult.tsx: HVI/ROI/LII 결과 카드\n   - ValueChart.tsx: 집값 변화 차트 (recharts)\n   - ProcessRoi.tsx: 공정별 ROI 바 차트\n3. src/app/hvi/page.tsx:\n   - /audit에서 넘어온 견적 데이터 수신 (searchParams 또는 상태)\n   - 또는 직접 아파트 정보 입력 폼\n   - HVI 결과 표시\n   - \"우선 투자 공정\" 추천\n4. src/app/api/hvi/route.ts:\n   - 견적 데이터 + 아파트 정보 수신\n   - HVI 엔진 실행\n   - 결과 반환",
+        "testStrategy": "1. /audit에서 /hvi로 데이터 전달 확인\n2. HVI/ROI/LII 계산 정확성 검증\n3. 공정별 ROI 차트 렌더링 확인\n4. 다양한 평형대(24평, 32평, 45평) 테스트",
+        "priority": "medium",
+        "dependencies": [
+          "7"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "9",
+        "title": "AI 상담 채팅 기능 구현 (/chat)",
+        "description": "Vercel AI SDK와 Gemini를 사용한 인테리어 AI 상담 채팅 기능을 구현합니다.",
+        "details": "1. src/lib/prompts/system.ts - 마스터 시스템 프롬프트:\n   - 인테리어 전문 AI 상담사 역할\n   - 한국 아파트 리모델링 전문\n   - 출처 기반 답변 강조\n   - 주관적 표현 금지\n2. src/lib/prompts/chat.ts - 상담 프롬프트:\n   - RAG 컨텍스트 주입 템플릿\n   - Tool calling 정의 (견적 조회, 자재 비교, 공정 설명)\n3. src/app/api/chat/route.ts - 채팅 API:\n   - Vercel AI SDK streamText 사용\n   - v4_knowledge_base RAG 검색\n   - Tool calling 구현:\n     - estimateTool: estimate_by_area_v2 호출\n     - materialCompareTool: 자재 비교\n     - processExplainTool: 공정 설명\n4. src/components/chat/:\n   - ChatUI.tsx: 채팅 인터페이스 (useChat 훅 사용)\n   - MessageBubble.tsx: 사용자/AI 메시지 버블\n   - SourceBadge.tsx: 출처 뱃지\n5. src/app/chat/page.tsx:\n   - ChatUI 렌더링\n   - 추천 질문 칩 (\"32평 올수리 보통 얼마야?\" 등)\n   - 파일 업로드 버튼 → /audit 연결",
+        "testStrategy": "1. 스트리밍 응답 정상 동작 확인\n2. RAG 검색 결과 컨텍스트 포함 확인\n3. Tool calling 정상 동작 테스트\n4. 출처 뱃지 표시 확인\n5. 추천 질문 클릭 시 자동 입력 확인",
+        "priority": "medium",
+        "dependencies": [
+          "2",
+          "6"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "10",
+        "title": "데이터 수집 파이프라인 완성 및 품질 검증",
+        "description": "업로드된 견적서/도면 데이터의 품질 검증 및 DB 적재 파이프라인을 완성합니다.",
+        "details": "1. 품질 검증 로직 (src/lib/engine/validation.ts):\n   - validateExtractedQuote(quote): 추출 데이터 품질 검사\n     - 총액 일치 여부\n     - 공정명 표준화 완료 여부\n     - 누락 필드 검사\n   - validateFloorplanData(data): 도면 데이터 검증\n     - 면적 범위 합리성 (15~60평)\n     - 치수 정합성\n2. 데이터 정제 로직 (src/lib/engine/normalize.ts):\n   - normalizeProcessName(name): 17개 표준 공정명으로 정규화\n   - normalizeAmount(amount, area): 평당 금액 정규화\n3. 백그라운드 적재 (src/app/api/upload/route.ts 확장):\n   - 품질 검증 통과 시 processed = true\n   - v4_market_cases 테이블에 새 시공 사례 추가\n   - v4_item_prices 테이블에 새 단가 데이터 추가\n   - v4_standard_quantities 도면 기반 보강\n4. 메트릭스 대시보드 (관리자용, 선택):\n   - 일별 업로드 수\n   - 품질 검증 통과율\n   - 누적 데이터 건수",
+        "testStrategy": "1. 정상 데이터 품질 검증 통과 확인\n2. 비정상 데이터 검증 실패 확인\n3. 공정명 정규화 정확성 테스트\n4. DB 적재 후 데이터 정합성 확인\n5. 450건 → 451건 증가 확인",
+        "priority": "medium",
+        "dependencies": [
+          "6",
+          "7"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "11",
+        "title": "모바일 반응형 최적화 및 접근성 개선",
+        "description": "모든 페이지의 모바일 반응형 디자인을 최적화하고 웹 접근성을 개선합니다.",
+        "details": "1. 모바일 반응형 (TailwindCSS):\n   - 브레이크포인트: sm(640px), md(768px), lg(1024px)\n   - Navbar 모바일 햄버거 메뉴\n   - 카드 레이아웃 1열→2열→3열 변환\n   - 차트 크기 자동 조정\n   - 터치 친화적 버튼 크기 (최소 44x44px)\n2. 접근성 (WCAG 2.1 AA):\n   - 모든 이미지 alt 속성\n   - 폼 라벨 연결\n   - 키보드 내비게이션\n   - 색상 대비율 4.5:1 이상\n   - aria-label, aria-describedby 적용\n3. 성능 최적화:\n   - Next.js Image 최적화\n   - 컴포넌트 lazy loading\n   - 번들 사이즈 최적화\n4. SEO 기본:\n   - metadata 설정 (title, description)\n   - OpenGraph 태그\n   - robots.txt, sitemap.xml",
+        "testStrategy": "1. 다양한 디바이스 뷰포트 테스트 (375px, 768px, 1280px)\n2. Lighthouse 접근성 점수 90+ 확인\n3. 키보드만으로 전체 기능 사용 가능 확인\n4. 스크린 리더 테스트\n5. Lighthouse 성능 점수 80+ 확인",
+        "priority": "medium",
+        "dependencies": [
+          "4",
+          "5",
+          "7",
+          "8",
+          "9"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "12",
+        "title": "에러 핸들링 및 로딩 상태 UX 개선",
+        "description": "전역 에러 바운더리, API 에러 처리, 로딩 상태 UI를 구현합니다.",
+        "details": "1. 전역 에러 바운더리:\n   - src/app/error.tsx: 전역 에러 페이지\n   - src/app/not-found.tsx: 404 페이지\n   - 사용자 친화적 에러 메시지\n2. API 에러 핸들링:\n   - 일관된 에러 응답 형식: { error: string, code: string }\n   - Zod 파싱 에러 처리\n   - Supabase 쿼리 에러 처리\n   - Gemini API 에러 처리 (rate limit, timeout)\n3. 로딩 상태 UI:\n   - src/components/shared/LoadingSpinner.tsx\n   - src/app/loading.tsx: 전역 로딩\n   - 각 페이지별 Suspense 경계\n   - 스켈레톤 UI (감사 리포트, 채팅)\n4. 재시도 로직:\n   - API 호출 실패 시 자동 재시도 (최대 3회)\n   - 지수 백오프 적용\n5. 오프라인 상태 감지:\n   - 네트워크 연결 끊김 시 알림",
+        "testStrategy": "1. 의도적 에러 발생 시 에러 페이지 표시 확인\n2. API 타임아웃 시 재시도 동작 확인\n3. 로딩 스피너 표시 타이밍 확인\n4. 네트워크 끊김 시 오프라인 알림 확인",
+        "priority": "medium",
+        "dependencies": [
+          "4",
+          "6",
+          "7",
+          "9"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "13",
+        "title": "Vercel 배포 및 환경 설정",
+        "description": "Vercel에 프로젝트를 배포하고 프로덕션 환경을 설정합니다.",
+        "details": "1. Vercel 프로젝트 생성:\n   - GitHub 레포지토리 연결\n   - 환경변수 설정 (NEXT_PUBLIC_SUPABASE_URL 등)\n   - 빌드 명령어 확인\n2. 환경 분리:\n   - Production: 실제 Supabase 연결\n   - Preview: 동일 Supabase (기존 DB 사용)\n   - 환경별 환경변수 설정\n3. 도메인 설정 (선택):\n   - 커스텀 도메인 연결\n   - SSL 인증서 자동 설정\n4. 모니터링:\n   - Vercel Analytics 활성화\n   - Edge Config 설정 (필요시)\n5. 빌드 최적화:\n   - 번들 사이즈 50MB 이하 확인 (sharp 미사용)\n   - Edge Runtime 적용 (API 라우트)",
+        "testStrategy": "1. Vercel 빌드 성공 확인\n2. 프로덕션 URL 접속 및 전체 기능 테스트\n3. 환경변수 정상 로드 확인\n4. Lighthouse 성능 점수 확인\n5. 번들 사이즈 50MB 미만 확인",
+        "priority": "low",
+        "dependencies": [
+          "11",
+          "12"
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "version": "1.0.0",
+      "lastModified": "2026-04-02T15:49:53.369Z",
+      "taskCount": 13,
+      "completedCount": 0,
+      "tags": [
+        "master"
+      ]
+    }
+  }
+}
