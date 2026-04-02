@@ -1,15 +1,19 @@
 import HeroSection from "@/components/layout/HeroSection";
-import FeatureCards from "@/components/home/FeatureCard";
-import SampleReport from "@/components/home/SampleReport";
+import PainPoints from "@/components/home/PainPoints";
+import FeatureShowcase from "@/components/home/FeatureShowcase";
 import DataTrust from "@/components/home/DataTrust";
+import ReportPreview from "@/components/home/ReportPreview";
+import FinalCTA from "@/components/home/FinalCTA";
 
 export default function Home() {
   return (
     <>
       <HeroSection />
-      <FeatureCards />
-      <SampleReport />
+      <PainPoints />
+      <FeatureShowcase />
       <DataTrust />
+      <ReportPreview />
+      <FinalCTA />
     </>
   );
 }

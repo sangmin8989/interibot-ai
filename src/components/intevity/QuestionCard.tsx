@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import type { IntevityQuestion } from "@/lib/data/intevity-questions";
 
 interface Props {
@@ -10,13 +11,20 @@ interface Props {
 
 export default function QuestionCard({ question, selectedScore, onSelect }: Props) {
   return (
-    <div className="mx-auto max-w-lg animate-in fade-in slide-in-from-right-4 duration-300">
-      <div className="mb-6 text-center">
-        <span className="mb-2 block text-3xl">{question.emoji}</span>
-        <p className="text-xs font-medium uppercase tracking-wider text-orange">
+    <motion.div
+      key={question.id}
+      initial={{ opacity: 0, x: 60 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -60 }}
+      transition={{ duration: 0.35, ease: "easeOut" }}
+      className="mx-auto max-w-lg"
+    >
+      <div className="mb-8 text-center">
+        <span className="mb-2 block text-4xl">{question.emoji}</span>
+        <p className="text-xs font-semibold uppercase tracking-widest text-orange-500">
           {question.axis}
         </p>
-        <h2 className="mt-2 text-xl font-bold leading-relaxed">
+        <h2 className="mt-3 text-xl font-bold leading-relaxed text-gray-900 md:text-2xl">
           {question.question}
         </h2>
       </div>
@@ -26,17 +34,17 @@ export default function QuestionCard({ question, selectedScore, onSelect }: Prop
           <button
             key={opt.score}
             onClick={() => onSelect(opt.score)}
-            className={`rounded-xl border-2 px-4 py-3 text-left text-sm font-medium transition-all
+            className={`rounded-2xl border-2 px-5 py-4 text-left text-sm font-medium transition-all duration-200
               ${
                 selectedScore === opt.score
-                  ? "border-orange bg-orange/10 text-foreground"
-                  : "border-border bg-card hover:border-orange/50"
+                  ? "border-orange-400 bg-orange-50 text-gray-900 shadow-md"
+                  : "border-gray-200 bg-white text-gray-700 hover:border-orange-300 hover:shadow-sm"
               }`}
           >
             {opt.label}
           </button>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }
