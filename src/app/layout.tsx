@@ -3,6 +3,9 @@ import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import LenisProvider from "@/components/shared/LenisProvider";
+import CustomCursor from "@/components/shared/CustomCursor";
+import FilmGrain from "@/components/shared/FilmGrain";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -40,9 +43,13 @@ export default function RootLayout({
         />
       </head>
       <body className="flex min-h-full flex-col bg-white font-pretendard text-black antialiased">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <LenisProvider>
+          <CustomCursor />
+          <FilmGrain />
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </LenisProvider>
       </body>
     </html>
   );
