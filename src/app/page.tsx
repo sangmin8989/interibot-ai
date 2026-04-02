@@ -117,44 +117,109 @@ export default function Home() {
 
   return (
     <div ref={scrollRef}>
-      {/* ═══ Screen 1: The room IS the hero ═══ */}
-      <section className="relative flex min-h-screen flex-col bg-white">
-        {/* Room — full width on mobile, takes center stage */}
-        <motion.div
-          className="relative w-full flex-1"
-          style={{ scale: roomScale, opacity: roomOpacity }}
-        >
-          <div className="absolute inset-0 flex items-center justify-center px-4 pt-16">
-            <div className="w-full max-w-3xl overflow-hidden rounded-sm shadow-[0_30px_80px_-20px_rgba(0,0,0,0.15)]">
-              <InteractiveRoom />
-            </div>
-          </div>
-        </motion.div>
+      {/* ═══ Screen 1: Hero ═══ */}
+      <section className="relative min-h-screen bg-white">
+        <div className="mx-auto max-w-7xl px-6 pt-24 md:pt-36">
+          {/* Desktop: 2-column / Mobile: stacked */}
+          <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
 
-        {/* Overlay text — minimal, over the room */}
-        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-end px-6 pb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 1, ease }}
-            className="pointer-events-auto text-center"
-          >
-            <p className="text-[9px] tracking-[0.5em] text-[#C9A96E]">INTERIBOT AI</p>
-            <h1 className="mt-3 font-serif text-[clamp(2rem,6vw,3.5rem)] font-bold leading-[1.1] tracking-tight text-black">
-              인테리어의 모든 답.
-            </h1>
-            <p className="mt-3 text-[13px] text-black/30">공간을 탭해서 확인하세요</p>
-          </motion.div>
+            {/* Left: Typography — visible clearly on PC */}
+            <motion.div
+              className="lg:col-span-5"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1.2, ease }}
+            >
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2, duration: 1, ease }}
+                className="text-[9px] tracking-[0.5em] text-[#C9A96E]"
+              >
+                INTERIBOT AI
+              </motion.p>
+
+              <h1 className="mt-8 font-serif">
+                <span className="block text-[clamp(2.5rem,5.5vw,4.5rem)] font-extralight leading-[1.1] tracking-tight text-black">
+                  <SplitText delay={0.4}>인테리어의</SplitText>
+                </span>
+                <span className="block text-[clamp(2.5rem,5.5vw,4.5rem)] font-bold leading-[1.1] tracking-tight text-black">
+                  <SplitText delay={0.7}>모든 답.</SplitText>
+                </span>
+              </h1>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.4, duration: 1, ease }}
+                className="mt-10 max-w-sm text-[14px] leading-[2] text-black/35"
+              >
+                121,515건의 시장 데이터가 만든 기준.
+                <br />견적서를 읽는 눈을 드립니다.
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.8, duration: 1, ease }}
+                className="mt-12 flex items-center gap-8"
+              >
+                <MagneticButton>
+                  <Link href="/audit" className="inline-block border-b border-black px-2 py-2 pb-1 text-[12px] font-medium tracking-[0.1em] text-black transition-all duration-500 hover:border-[#C9A96E] hover:text-[#C9A96E]">
+                    견적서 분석
+                  </Link>
+                </MagneticButton>
+                <MagneticButton>
+                  <Link href="/intevity" className="inline-block px-2 py-2 text-[12px] tracking-[0.1em] text-black/40 transition-colors duration-500 hover:text-black/70">
+                    성향분석
+                  </Link>
+                </MagneticButton>
+              </motion.div>
+
+              {/* Data footnotes — PC only */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 2.2, duration: 1, ease }}
+                className="mt-16 hidden gap-10 lg:flex"
+              >
+                {[{ n: "121,515", l: "데이터" }, { n: "450", l: "사례" }, { n: "17", l: "공정" }].map(d => (
+                  <div key={d.n} className="flex items-baseline gap-1.5">
+                    <span className="font-mono text-[10px] text-black/40">{d.n}</span>
+                    <span className="text-[9px] text-black/20">{d.l}</span>
+                  </div>
+                ))}
+              </motion.div>
+            </motion.div>
+
+            {/* Right: Interactive Room */}
+            <motion.div
+              className="lg:col-span-7"
+              style={{ scale: roomScale }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 1.4, ease }}
+            >
+              <div className="relative overflow-hidden rounded-sm shadow-[0_30px_80px_-20px_rgba(0,0,0,0.12)]">
+                <InteractiveRoom />
+                {/* Badge */}
+                <div className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-full border-[0.5px] border-[#D4764B]/20 bg-[#D4764B]/[0.1] px-2.5 py-1 backdrop-blur-md">
+                  <svg width="8" height="8" viewBox="0 0 12 12"><polygon points="6,0 7.5,4 12,4.5 8.5,7.5 9.5,12 6,9.5 2.5,12 3.5,7.5 0,4.5 4.5,4" fill="#D4764B"/></svg>
+                  <span className="text-[8px] font-medium tracking-[1px] text-[#e8a87c]">공간을 탭하세요</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
         </div>
 
-        {/* Scroll hint */}
+        {/* Bottom gold line */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 2, duration: 1 }}
-          className="absolute bottom-4 left-1/2 -translate-x-1/2"
+          transition={{ delay: 2.5, duration: 1, ease }}
+          className="mx-auto mt-16 max-w-7xl px-6 pb-10"
         >
-          <div className="h-8 w-[1px] animate-pulse bg-gradient-to-b from-transparent to-black/20" />
+          <div className="h-[0.5px] bg-[#C9A96E]/15" />
         </motion.div>
       </section>
 
