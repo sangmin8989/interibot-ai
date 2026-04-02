@@ -15,52 +15,33 @@ const companyLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0A0A0A] px-4 py-16">
+    <footer className="bg-[#0A0A0B] px-4 py-16">
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col gap-12 md:flex-row md:justify-between">
-          {/* Logo / info */}
           <div>
-            <p className="text-xl font-bold">
-              <span className="bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent">
-                인테리봇
-              </span>{" "}
+            <p className="text-lg font-bold tracking-tight">
+              <span className="bg-gradient-to-r from-[#FF6B35] to-amber-400 bg-clip-text text-transparent">인테리봇</span>{" "}
               <span className="text-white">AI</span>
             </p>
             <p className="mt-3 text-sm text-gray-500">아르젠 스튜디오</p>
-            <p className="mt-1 text-sm text-gray-600">
-              인테리어, 전문가 없이도 똑똑하게
-            </p>
+            <p className="mt-1 text-sm text-gray-600">인테리어, 전문가 없이도 똑똑하게</p>
           </div>
-
-          {/* Links */}
           <div className="flex gap-16">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-                서비스
-              </p>
-              <div className="mt-3 flex flex-col gap-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-gray-500">서비스</p>
+              <div className="mt-4 flex flex-col gap-2.5">
                 {serviceLinks.map((l) => (
-                  <Link
-                    key={l.href}
-                    href={l.href}
-                    className="text-sm text-gray-500 transition hover:text-white"
-                  >
+                  <Link key={l.href} href={l.href} className="text-sm text-gray-500 transition hover:text-white">
                     {l.label}
                   </Link>
                 ))}
               </div>
             </div>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-                회사
-              </p>
-              <div className="mt-3 flex flex-col gap-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-gray-500">회사</p>
+              <div className="mt-4 flex flex-col gap-2.5">
                 {companyLinks.map((l) => (
-                  <Link
-                    key={l.label}
-                    href={l.href}
-                    className="text-sm text-gray-500 transition hover:text-white"
-                  >
+                  <Link key={l.label} href={l.href} className="text-sm text-gray-500 transition hover:text-white">
                     {l.label}
                   </Link>
                 ))}
@@ -68,11 +49,8 @@ export default function Footer() {
             </div>
           </div>
         </div>
-
-        <div className="mt-12 border-t border-gray-800 pt-6">
-          <p className="text-center text-xs text-gray-600">
-            &copy; 2026 아르젠 스튜디오. All rights reserved.
-          </p>
+        <div className="mt-16 border-t border-white/[0.06] pt-6">
+          <p className="text-center text-xs text-gray-600">&copy; 2026 아르젠 스튜디오. All rights reserved.</p>
         </div>
       </div>
     </footer>

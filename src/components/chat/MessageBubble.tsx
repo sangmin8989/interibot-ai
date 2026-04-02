@@ -14,8 +14,8 @@ export default function MessageBubble({ message }: { message: UIMessage }) {
       <div
         className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
           isUser
-            ? "rounded-br-md bg-gradient-to-r from-orange-500 to-amber-500 text-white"
-            : "rounded-bl-md bg-gray-100 text-gray-800"
+            ? "rounded-br-sm bg-[#F3F4F6] text-[#1A1A1A]"
+            : "rounded-bl-sm border-l-2 border-[#FF6B35] bg-white text-[#374151] shadow-sm"
         }`}
       >
         {textContent.split("\n").map((line, i) => (
@@ -23,6 +23,9 @@ export default function MessageBubble({ message }: { message: UIMessage }) {
             {line}
           </p>
         ))}
+        {!isUser && (
+          <p className="mt-2 text-[10px] text-[#9CA3AF]">📊 시장 9,610건 데이터 기반</p>
+        )}
       </div>
     </div>
   );

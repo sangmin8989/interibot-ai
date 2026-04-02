@@ -78,7 +78,7 @@ export async function generateAuditReport(
           p75: adjustedP75,
           percentile: Math.round(percentile),
           verdict: determineVerdict(percentile),
-          source: `박목수 66건 기준 (${anyBm.area_py}평 비례 환산)`,
+          source: `시장 데이터 기준 (${anyBm.area_py}평 비례 환산)`,
         });
       }
       continue;
@@ -110,7 +110,7 @@ export async function generateAuditReport(
       p75: bm.p75,
       percentile: Math.round(percentile),
       verdict: determineVerdict(percentile),
-      source: "박목수 66건 기준",
+      source: "시장 데이터 기준",
     });
   }
 
@@ -131,6 +131,6 @@ export async function generateAuditReport(
     missingProcesses,
     totalAmount: quote.totalAmount,
     benchmarkP50Total: totalBenchmarkP50,
-    source: "박목수 66건 + 시장 450건 기준",
+    source: "시장 450건 기준",
   };
 }

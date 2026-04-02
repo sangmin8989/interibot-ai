@@ -3,7 +3,8 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 
-// 스크롤 진입 시 fade-in + slide-up 래퍼
+const ease = [0.22, 1, 0.36, 1] as const;
+
 export function FadeIn({
   children,
   delay = 0,
@@ -14,14 +15,14 @@ export function FadeIn({
   className?: string;
 }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 30 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay, ease: "easeOut" as const }}
+      transition={{ duration: 0.6, delay, ease }}
       className={className}
     >
       {children}
@@ -29,7 +30,6 @@ export function FadeIn({
   );
 }
 
-// 스크롤 진입 시 왼쪽/오른쪽에서 slide-in
 export function SlideIn({
   children,
   from = "left",
@@ -42,7 +42,7 @@ export function SlideIn({
   className?: string;
 }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
   const x = from === "left" ? -60 : 60;
 
   return (
@@ -50,7 +50,7 @@ export function SlideIn({
       ref={ref}
       initial={{ opacity: 0, x }}
       animate={isInView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.6, delay, ease: "easeOut" as const }}
+      transition={{ duration: 0.6, delay, ease }}
       className={className}
     >
       {children}
@@ -58,18 +58,17 @@ export function SlideIn({
   );
 }
 
-// stagger 컨테이너
 export function StaggerContainer({
   children,
   className = "",
-  staggerDelay = 0.15,
+  staggerDelay = 0.1,
 }: {
   children: React.ReactNode;
   className?: string;
   staggerDelay?: number;
 }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
     <motion.div
@@ -97,8 +96,8 @@ export function StaggerItem({
   return (
     <motion.div
       variants={{
-        hidden: { opacity: 0, y: 30 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease } },
       }}
       className={className}
     >
@@ -107,7 +106,6 @@ export function StaggerItem({
   );
 }
 
-// 카운트업 애니메이션
 export function CountUp({
   target,
   duration = 2,
@@ -140,5 +138,30 @@ export function CountUp({
     <span ref={ref} className={className}>
       {count.toLocaleString()}{suffix}
     </span>
+  );
+}
+
+// 백분위 바 — 스크롤 진입 시 0→목표 애니메이션
+export function AnimatedBar({
+  percent,
+  color,
+  className = "",
+}: {
+  percent: number;
+  color: string;
+  className?: string;
+}) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+
+  return (
+    <div ref={ref} className={`h-2 w-full overflow-hidden rounded-full bg-gray-100 ${className}`}>
+      <motion.div
+        initial={{ width: 0 }}
+        animate={isInView ? { width: `${percent}%` } : {}}
+        transition={{ duration: 0.8, delay: 0.2, ease }}
+        className={`h-full rounded-full ${color}`}
+      />
+    </div>
   );
 }
