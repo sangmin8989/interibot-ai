@@ -109,12 +109,22 @@ const services = [
   { label: "AI 상담", desc: "9,610건 지식 기반\n전문 답변", href: "/chat", accent: "bg-black" },
 ];
 
-/* ── GSAP Horizontal Scroll Services ── */
+/* ── Services: Desktop=GSAP horizontal / Mobile=snap swipe ── */
 function HorizontalServices() {
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  // GSAP only on desktop
+  useEffect(() => {
+    if (isMobile) return;
     let ctx: { revert: () => void } | null = null;
     (async () => {
       const gsapModule = await import("gsap");
@@ -146,33 +156,48 @@ function HorizontalServices() {
       });
     })();
     return () => { ctx?.revert(); };
-  }, []);
+  }, [isMobile]);
 
+  // Mobile: snap swipe cards
+  if (isMobile) {
+    return (
+      <section className="bg-black px-6 py-16">
+        <p className="text-[9px] tracking-[0.5em] text-[#C9A96E]">SERVICES</p>
+        <h2 className="mt-4 font-serif text-2xl font-light text-white">네 가지 도구.</h2>
+        <p className="mt-3 text-[12px] text-white/30">← 좌우로 스와이프 →</p>
+
+        <div className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {services.map((s) => (
+            <Link key={s.label} href={s.href} className="block w-[75vw] shrink-0 snap-center">
+              <div className="flex h-full min-h-[200px] flex-col border border-white/[0.06] p-6 active:scale-[0.98]">
+                <div className={`h-1 w-6 rounded-full ${s.accent === "bg-black" ? "bg-white/20" : s.accent} opacity-50`} />
+                <h3 className="mt-4 text-[16px] font-medium text-white">{s.label}</h3>
+                <p className="mt-2 whitespace-pre-line text-[13px] leading-[1.7] text-white/40">{s.desc}</p>
+                <p className="mt-auto pt-4 text-[11px] text-[#C9A96E]/50">→</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  // Desktop: GSAP horizontal scroll
   return (
     <section ref={containerRef} className="relative overflow-hidden bg-black">
       <div ref={trackRef} className="flex h-screen w-max items-center">
-        {/* Intro panel */}
-        <div className="flex h-screen w-screen shrink-0 flex-col justify-center px-8 md:px-24">
+        <div className="flex h-screen w-screen shrink-0 flex-col justify-center px-24">
           <p className="text-[9px] tracking-[0.5em] text-[#C9A96E]">SERVICES</p>
           <h2 className="mt-4 font-serif text-[clamp(2rem,5vw,3.5rem)] font-light text-white">네 가지 도구.</h2>
           <p className="mt-4 text-[13px] text-white/30">스크롤하여 살펴보세요 →</p>
         </div>
-
-        {/* Service panels */}
-        {services.map((s, i) => (
-          <div key={s.label} className="flex h-screen w-screen shrink-0 items-center px-8 md:px-24">
+        {services.map((s) => (
+          <div key={s.label} className="flex h-screen w-screen shrink-0 items-center px-24">
             <div className="w-full max-w-lg">
               <div className={`h-1 w-8 rounded-full ${s.accent} opacity-40`} />
-              <h3 className="mt-6 font-serif text-[clamp(1.5rem,3vw,2.25rem)] font-light text-white">
-                {s.label}
-              </h3>
-              <p className="mt-4 whitespace-pre-line text-[14px] leading-[2] text-white/35">
-                {s.desc}
-              </p>
-              <Link
-                href={s.href}
-                className="relative z-10 mt-8 inline-block border-b border-white/15 px-1 py-2 pb-1 text-[11px] tracking-[0.1em] text-white/40 transition-all duration-500 hover:border-white hover:text-white"
-              >
+              <h3 className="mt-6 font-serif text-[clamp(1.5rem,3vw,2.25rem)] font-light text-white">{s.label}</h3>
+              <p className="mt-4 whitespace-pre-line text-[14px] leading-[2] text-white/35">{s.desc}</p>
+              <Link href={s.href} className="relative z-10 mt-8 inline-block border-b border-white/15 px-1 py-2 pb-1 text-[11px] tracking-[0.1em] text-white/40 transition-all hover:border-white hover:text-white">
                 시작하기
               </Link>
             </div>

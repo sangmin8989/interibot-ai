@@ -7,8 +7,14 @@ import { useEffect, useRef } from "react";
 export default function DisplacementCanvas({ className = "" }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: 0.5, y: 0.5, targetX: 0.5, targetY: 0.5 });
+  const isTouchRef = useRef(false);
 
   useEffect(() => {
+    // Skip on mobile
+    if ("ontouchstart" in window || navigator.maxTouchPoints > 0) {
+      isTouchRef.current = true;
+      return;
+    }
     const canvas = canvasRef.current;
     if (!canvas) return;
     const gl = canvas.getContext("webgl");

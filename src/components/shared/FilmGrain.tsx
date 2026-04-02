@@ -1,11 +1,17 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function FilmGrain() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
+    // Desktop only — saves battery on mobile
+    const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    if (isTouch) return;
+    setShow(true);
+
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -25,7 +31,7 @@ export default function FilmGrain() {
         data[i] = v;
         data[i + 1] = v;
         data[i + 2] = v;
-        data[i + 3] = 12; // Very subtle — 5% opacity
+        data[i + 3] = 12;
       }
       ctx!.putImageData(imageData, 0, 0);
       animId = requestAnimationFrame(draw);
@@ -33,6 +39,8 @@ export default function FilmGrain() {
     draw();
     return () => cancelAnimationFrame(animId);
   }, []);
+
+  if (!show) return null;
 
   return (
     <canvas
