@@ -5,6 +5,7 @@ import { useRef, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import SplitText from "@/components/shared/SplitText";
 import MagneticButton from "@/components/shared/MagneticButton";
+import DisplacementCanvas from "@/components/shared/DisplacementCanvas";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -173,7 +174,9 @@ export default function HeroSection() {
           >
             <div className="relative aspect-[4/3] overflow-hidden rounded-sm border border-black/[0.04] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.12)]">
               <RoomIllustration />
-              <div className="absolute bottom-4 left-4 flex items-center gap-1.5 rounded-full border-[0.5px] border-[#D4764B]/20 bg-[#D4764B]/[0.1] px-3 py-1.5 backdrop-blur-md">
+              {/* WebGL displacement overlay — mouse reactive */}
+              <DisplacementCanvas />
+              <div className="absolute bottom-4 left-4 z-20 flex items-center gap-1.5 rounded-full border-[0.5px] border-[#D4764B]/20 bg-[#D4764B]/[0.1] px-3 py-1.5 backdrop-blur-md">
                 <svg width="10" height="10" viewBox="0 0 12 12"><polygon points="6,0 7.5,4 12,4.5 8.5,7.5 9.5,12 6,9.5 2.5,12 3.5,7.5 0,4.5 4.5,4" fill="#D4764B"/></svg>
                 <span className="text-[9px] font-medium uppercase tracking-[1.5px] text-[#e8a87c]">interibot ai</span>
               </div>
