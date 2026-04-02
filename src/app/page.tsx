@@ -223,7 +223,36 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* ═══ Screen 2: Live audit proof ═══ */}
+      {/* ═══ Screen 2: Pain Points — WHY ═══ */}
+      <section className="bg-black px-6 py-20 md:py-32">
+        <div className="mx-auto max-w-5xl">
+          <FadeIn>
+            <p className="text-[9px] tracking-[0.5em] text-[#C9A96E]">WHY</p>
+            <h2 className="mt-4 font-serif text-[clamp(1.5rem,3.5vw,2.5rem)] font-light text-white">
+              모르는 채로<br />결정하고 계십니다.
+            </h2>
+          </FadeIn>
+          <div className="mt-14">
+            {[
+              { num: "01", title: "판단의 부재", desc: "견적서를 받았지만 맞는지 알 수 없습니다. 기준이 없으면 확인할 방법도 없습니다." },
+              { num: "02", title: "구조의 불투명", desc: "자재, 인건비, 간접비가 어떤 비율인지. 전문가가 아니면 보이지 않습니다." },
+              { num: "03", title: "보이지 않는 누락", desc: "빠진 공정은 나중에 발견됩니다. 그때는 이미 선택지가 줄어든 뒤입니다." },
+            ].map((p, i) => (
+              <FadeIn key={p.num} delay={i * 0.1}>
+                <div className="flex gap-6 border-t border-white/[0.06] py-8 md:gap-12">
+                  <span className="font-mono text-[11px] text-[#C9A96E]/40">{p.num}</span>
+                  <div className="max-w-md">
+                    <h3 className="font-serif text-base text-white">{p.title}</h3>
+                    <p className="mt-2 text-[13px] leading-[1.9] text-white/35">{p.desc}</p>
+                  </div>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ Screen 3: Live audit proof ═══ */}
       <section className="bg-white px-6 py-20 md:py-32">
         <div className="mx-auto max-w-5xl">
           <FadeIn>
@@ -290,7 +319,87 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ Screen 4: Data — monumental numbers ═══ */}
+      {/* ═══ Screen 4: Feature details — left/right alternating ═══ */}
+      <section className="bg-white px-6 py-20 md:py-32">
+        <div className="mx-auto max-w-5xl space-y-24 md:space-y-32">
+          {/* 성향분석 */}
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-20">
+            <FadeIn>
+              <p className="text-[9px] tracking-[0.5em] text-[#C9A96E]">PERSONALITY</p>
+              <h3 className="mt-4 font-serif text-[clamp(1.25rem,2.5vw,1.75rem)] font-light text-black">
+                당신이 원하는 공간이<br />무엇인지부터.
+              </h3>
+              <p className="mt-4 max-w-sm text-[13px] leading-[2] text-black/35">
+                15가지 질문이 공간감각, 생활 리듬, 미적 취향을 읽습니다. 6가지 스타일 중 맞춤 추천.
+              </p>
+              <Link href="/intevity" className="mt-6 inline-block border-b border-black/15 pb-0.5 text-[11px] text-black/40 transition hover:border-black hover:text-black">시작하기</Link>
+            </FadeIn>
+            <FadeIn delay={0.15}>
+              <div className="border border-black/[0.06] p-6">
+                <p className="text-[9px] tracking-[0.3em] text-[#C9A96E]/50">Q.09</p>
+                <p className="mt-3 font-serif text-base text-black">끌리는 공간 분위기는?</p>
+                <div className="mt-4">
+                  {["화이트 — 절제된 공간", "우드톤 — 자연의 온기", "포인트 — 자기다운 공간"].map((o, j) => (
+                    <div key={o} className={`border-b py-3 text-[12px] ${j === 1 ? "border-[#C9A96E]/20 text-black" : "border-black/[0.04] text-black/30"}`}>{o}</div>
+                  ))}
+                </div>
+              </div>
+            </FadeIn>
+          </div>
+
+          {/* 견적서 감사 — reversed */}
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-20">
+            <FadeIn className="order-2 lg:order-1">
+              <div className="border border-black/[0.06] p-6">
+                <p className="text-[9px] tracking-[0.3em] text-[#C9A96E]/50">REPORT</p>
+                <div className="mt-4 space-y-3">
+                  {DEMO_AUDIT_REPORT.processes.slice(0, 4).map(p => {
+                    const sc = getStatusColor(p.status);
+                    return (
+                      <div key={p.name} className="space-y-1">
+                        <div className="flex justify-between"><span className="text-[11px] text-black/40">{p.name}</span><span className={`text-[9px] ${p.status === "PASS" ? "text-black/20" : p.status === "WARN" ? "text-[#C68A2E]" : "text-[#C44B3F]"}`}>{p.status}</span></div>
+                        <AnimatedBar percent={p.percentile} color={sc.bar} />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </FadeIn>
+            <FadeIn delay={0.15} className="order-1 lg:order-2">
+              <p className="text-[9px] tracking-[0.5em] text-[#C9A96E]">AUDIT</p>
+              <h3 className="mt-4 font-serif text-[clamp(1.25rem,2.5vw,1.75rem)] font-light text-black">
+                견적서를 읽는<br />눈을 드립니다.
+              </h3>
+              <p className="mt-4 max-w-sm text-[13px] leading-[2] text-black/35">
+                17개 공정이 시장의 어디에 위치하는지. 빠진 항목은 없는지. 데이터가 보여드립니다.
+              </p>
+              <Link href="/audit" className="mt-6 inline-block border-b border-black/15 pb-0.5 text-[11px] text-black/40 transition hover:border-black hover:text-black">분석하기</Link>
+            </FadeIn>
+          </div>
+
+          {/* 집값 + 상담 side by side */}
+          <div className="grid gap-[0.5px] bg-black/[0.04] md:grid-cols-2">
+            <FadeIn>
+              <Link href="/hvi" className="group block bg-white p-10">
+                <p className="text-[9px] tracking-[0.5em] text-[#C9A96E]">HOME VALUE</p>
+                <h3 className="mt-4 font-serif text-lg font-light text-black">공사 후의 가치를 미리 봅니다.</h3>
+                <p className="mt-3 text-[12px] leading-[2] text-black/30">어떤 공정이 집의 가치에 기여하는지.</p>
+                <p className="mt-6 text-[10px] text-black/15 transition group-hover:text-[#C9A96E]">→</p>
+              </Link>
+            </FadeIn>
+            <FadeIn delay={0.1}>
+              <Link href="/chat" className="group block bg-white p-10">
+                <p className="text-[9px] tracking-[0.5em] text-[#C9A96E]">CONSULTATION</p>
+                <h3 className="mt-4 font-serif text-lg font-light text-black">궁금한 것이 있으시면 물어보십시오.</h3>
+                <p className="mt-3 text-[12px] leading-[2] text-black/30">9,610건의 지식을 학습한 AI가 답변합니다.</p>
+                <p className="mt-6 text-[10px] text-black/15 transition group-hover:text-[#C9A96E]">→</p>
+              </Link>
+            </FadeIn>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ Screen 5: Data — monumental numbers ═══ */}
       <section className="bg-black px-6 py-20 md:py-32">
         <div className="mx-auto max-w-5xl">
           <FadeIn>
