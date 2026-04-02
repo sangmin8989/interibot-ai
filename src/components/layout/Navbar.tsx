@@ -25,6 +25,7 @@ export default function Navbar() {
 
   return (
     <>
+      {/* Top bar */}
       <nav className={`fixed top-0 z-50 w-full transition-all duration-700 ${
         scrolled ? "border-b border-black/[0.04] bg-white/90 backdrop-blur-2xl" : "bg-transparent"
       }`}>
@@ -47,6 +48,27 @@ export default function Navbar() {
         </div>
       </nav>
 
+      {/* Mobile bottom CTA bar — always visible on scroll */}
+      <AnimatePresence>
+        {scrolled && (
+          <motion.div
+            initial={{ y: 100 }}
+            animate={{ y: 0 }}
+            exit={{ y: 100 }}
+            transition={{ duration: 0.4, ease }}
+            className="fixed bottom-0 z-50 w-full border-t border-black/[0.04] bg-white/95 px-6 py-3 backdrop-blur-xl md:hidden"
+          >
+            <Link
+              href="/audit"
+              className="block rounded-sm bg-black py-3 text-center text-[12px] font-medium tracking-[0.1em] text-white active:scale-[0.98]"
+            >
+              견적서 분석하기
+            </Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Fullscreen menu */}
       <AnimatePresence>
         {open && (
           <motion.div
