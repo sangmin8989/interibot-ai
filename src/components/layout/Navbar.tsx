@@ -35,7 +35,7 @@ export default function Navbar() {
 
           <div className="hidden items-center gap-8 md:flex">
             {nav.map((i) => (
-              <Link key={i.href} href={i.href} className="text-[11px] tracking-[0.1em] text-black/30 transition-colors duration-500 hover:text-black">
+              <Link key={i.href} href={i.href} className="text-[11px] tracking-[0.1em] text-black/55 transition-colors duration-500 hover:text-black">
                 {i.label}
               </Link>
             ))}
