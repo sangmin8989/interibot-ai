@@ -3,7 +3,8 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 
-const ease = [0.22, 1, 0.36, 1] as const;
+// Hermès: slow, deliberate, confident
+const ease = [0.16, 1, 0.3, 1] as const;
 
 export function FadeIn({
   children,
@@ -15,14 +16,14 @@ export function FadeIn({
   className?: string;
 }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "-120px" });
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 24 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay, ease }}
+      transition={{ duration: 1, delay, ease }}
       className={className}
     >
       {children}
@@ -42,15 +43,14 @@ export function SlideIn({
   className?: string;
 }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const x = from === "left" ? -60 : 60;
+  const isInView = useInView(ref, { once: true, margin: "-120px" });
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, x }}
+      initial={{ opacity: 0, x: from === "left" ? -40 : 40 }}
       animate={isInView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.6, delay, ease }}
+      transition={{ duration: 1, delay, ease }}
       className={className}
     >
       {children}
@@ -61,14 +61,14 @@ export function SlideIn({
 export function StaggerContainer({
   children,
   className = "",
-  staggerDelay = 0.1,
+  staggerDelay = 0.12,
 }: {
   children: React.ReactNode;
   className?: string;
   staggerDelay?: number;
 }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "-120px" });
 
   return (
     <motion.div
@@ -86,18 +86,12 @@ export function StaggerContainer({
   );
 }
 
-export function StaggerItem({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+export function StaggerItem({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
     <motion.div
       variants={{
-        hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease } },
+        hidden: { opacity: 0, y: 16 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease } },
       }}
       className={className}
     >
@@ -108,7 +102,7 @@ export function StaggerItem({
 
 export function CountUp({
   target,
-  duration = 2,
+  duration = 2.5,
   suffix = "",
   className = "",
 }: {
@@ -125,23 +119,16 @@ export function CountUp({
     if (!isInView) return;
     const start = Date.now();
     const timer = setInterval(() => {
-      const elapsed = (Date.now() - start) / 1000;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(eased * target));
-      if (progress >= 1) clearInterval(timer);
+      const p = Math.min((Date.now() - start) / 1000 / duration, 1);
+      setCount(Math.floor((1 - Math.pow(1 - p, 4)) * target));
+      if (p >= 1) clearInterval(timer);
     }, 16);
     return () => clearInterval(timer);
   }, [isInView, target, duration]);
 
-  return (
-    <span ref={ref} className={className}>
-      {count.toLocaleString()}{suffix}
-    </span>
-  );
+  return <span ref={ref} className={className}>{count.toLocaleString()}{suffix}</span>;
 }
 
-// 백분위 바 — 스크롤 진입 시 0→목표 애니메이션
 export function AnimatedBar({
   percent,
   color,
@@ -155,12 +142,12 @@ export function AnimatedBar({
   const isInView = useInView(ref, { once: true });
 
   return (
-    <div ref={ref} className={`h-2 w-full overflow-hidden rounded-full bg-gray-100 ${className}`}>
+    <div ref={ref} className={`h-[3px] w-full bg-[#1A1A1A]/[0.04] ${className}`}>
       <motion.div
         initial={{ width: 0 }}
         animate={isInView ? { width: `${percent}%` } : {}}
-        transition={{ duration: 0.8, delay: 0.2, ease }}
-        className={`h-full rounded-full ${color}`}
+        transition={{ duration: 1.2, delay: 0.3, ease }}
+        className={`h-full ${color}`}
       />
     </div>
   );

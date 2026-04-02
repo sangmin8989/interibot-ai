@@ -3,24 +3,19 @@
 import Link from "next/link";
 import { FadeIn } from "@/components/shared/motion";
 
-/* Picasso: stark, almost empty, one bold gesture */
+/* Hermès: one sentence. One action. Absolute confidence. */
 
 export default function FinalCTA() {
   return (
-    <section className="relative overflow-hidden bg-[#0A0A0B] px-6 py-28 md:py-40">
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-        <div className="h-[400px] w-[400px] rounded-full bg-[#FF6B35]/[0.05] blur-[120px]" />
-      </div>
-
-      <FadeIn className="relative z-10 mx-auto max-w-3xl text-center">
-        <h2 className="text-[clamp(1.75rem,5vw,3.5rem)] font-black leading-[1.1] tracking-tight text-white">
-          지금 바로.
-        </h2>
-        <p className="mt-4 text-white/30">회원가입 없이. 무료로.</p>
-        <div className="mt-12">
+    <section className="bg-[#FAF9F7] px-6 py-40 md:py-52">
+      <FadeIn className="mx-auto max-w-2xl text-center">
+        <p className="font-serif text-[clamp(1.75rem,4vw,3rem)] font-light leading-[1.3] text-[#1A1A1A]">
+          확신을 드리겠습니다.
+        </p>
+        <div className="mt-14">
           <Link
             href="/audit"
-            className="inline-flex rounded-full bg-[#FF6B35] px-10 py-4 text-base font-semibold text-white transition-all hover:shadow-[0_0_60px_rgba(255,107,53,0.3)]"
+            className="border-b border-[#1A1A1A] pb-1 text-[13px] font-medium tracking-wide text-[#1A1A1A] transition-all duration-500 hover:border-[#FF6B35] hover:text-[#FF6B35]"
           >
             견적서 분석하기
           </Link>

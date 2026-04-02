@@ -1,198 +1,103 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
-import { Upload, X, FileText, Image as ImageIcon } from "lucide-react";
+import { useState, useRef } from "react";
+import { Upload, X } from "lucide-react";
 
-const ACCEPTED = {
-  estimate: ".jpg,.jpeg,.png,.pdf,.xlsx",
-  floorplan: ".jpg,.jpeg,.png,.pdf",
-};
+/* Hermès: form as ritual. Each input earns its space. */
 
 interface Props {
-  onUploadComplete: (data: {
-    estimateFile: File;
-    floorplanFile?: File;
-    apartmentName?: string;
-    areaPy?: number;
-    region?: string;
-  }) => void;
+  onUploadComplete: (data: { estimateFile: File; floorplanFile?: File; apartmentName?: string; areaPy?: number; region?: string }) => void;
   isLoading?: boolean;
 }
 
 export default function FileUpload({ onUploadComplete, isLoading }: Props) {
-  const [estimateFile, setEstimateFile] = useState<File | null>(null);
-  const [floorplanFile, setFloorplanFile] = useState<File | null>(null);
-  const [apartmentName, setApartmentName] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [floorplan, setFloorplan] = useState<File | null>(null);
   const [areaPy, setAreaPy] = useState("");
+  const [apartment, setApartment] = useState("");
   const [region, setRegion] = useState("");
-  const [dragOver, setDragOver] = useState<string | null>(null);
-  const estimateRef = useRef<HTMLInputElement>(null);
-  const floorplanRef = useRef<HTMLInputElement>(null);
-
-  const handleDrop = useCallback(
-    (e: React.DragEvent, type: "estimate" | "floorplan") => {
-      e.preventDefault();
-      setDragOver(null);
-      const file = e.dataTransfer.files[0];
-      if (!file) return;
-      if (type === "estimate") setEstimateFile(file);
-      else setFloorplanFile(file);
-    },
-    []
-  );
-
-  const handleSubmit = () => {
-    if (!estimateFile) return;
-    onUploadComplete({
-      estimateFile,
-      floorplanFile: floorplanFile || undefined,
-      apartmentName: apartmentName || undefined,
-      areaPy: areaPy ? Number(areaPy) : undefined,
-      region: region || undefined,
-    });
-  };
+  const [drag, setDrag] = useState(false);
+  const ref = useRef<HTMLInputElement>(null);
+  const fpRef = useRef<HTMLInputElement>(null);
 
   return (
-    <div className="space-y-8">
-      {/* Estimate upload */}
+    <div className="space-y-10">
+      {/* Main upload */}
       <div>
-        <label className="mb-2 block text-sm font-semibold text-gray-800">
-          견적서 업로드 <span className="text-red-500">*</span>
-        </label>
+        <p className="text-[10px] tracking-[0.3em] text-[#1A1A1A]/25">견적서</p>
         <div
-          onClick={() => estimateRef.current?.click()}
-          onDragOver={(e) => { e.preventDefault(); setDragOver("estimate"); }}
-          onDragLeave={() => setDragOver(null)}
-          onDrop={(e) => handleDrop(e, "estimate")}
-          className={`cursor-pointer rounded-2xl border-2 border-dashed p-12 text-center transition-all ${
-            dragOver === "estimate"
-              ? "border-orange-400 bg-orange-50"
-              : estimateFile
-              ? "border-orange-300 bg-orange-50/50"
-              : "border-gray-300 hover:border-orange-300"
+          onClick={() => ref.current?.click()}
+          onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
+          onDragLeave={() => setDrag(false)}
+          onDrop={(e) => { e.preventDefault(); setDrag(false); const f = e.dataTransfer.files[0]; if (f) setFile(f); }}
+          className={`mt-4 cursor-pointer border py-16 text-center transition-all duration-500 ${
+            drag ? "border-[#FF6B35]/30 bg-[#FF6B35]/[0.02]" : file ? "border-[#1A1A1A]/10" : "border-[#1A1A1A]/[0.06] hover:border-[#1A1A1A]/10"
           }`}
         >
-          {estimateFile ? (
+          {file ? (
             <div className="flex items-center justify-center gap-3">
-              <FileText className="h-6 w-6 text-orange-500" />
-              <span className="font-medium text-gray-800">{estimateFile.name}</span>
-              <button
-                onClick={(e) => { e.stopPropagation(); setEstimateFile(null); }}
-                className="rounded-full p-1 text-gray-400 hover:bg-gray-200"
-              >
+              <span className="text-[13px] text-[#1A1A1A]/60">{file.name}</span>
+              <button onClick={(e) => { e.stopPropagation(); setFile(null); }} className="text-[#1A1A1A]/20 hover:text-[#1A1A1A]/40">
                 <X className="h-4 w-4" />
               </button>
             </div>
           ) : (
             <>
-              <Upload className="mx-auto h-10 w-10 text-gray-400" />
-              <p className="mt-3 text-sm font-medium text-gray-600">
-                클릭 또는 드래그하여 견적서를 업로드하세요
-              </p>
-              <p className="mt-1 text-xs text-gray-400">JPG, PNG, PDF, XLSX 지원</p>
+              <Upload className="mx-auto h-5 w-5 text-[#1A1A1A]/15" />
+              <p className="mt-3 text-[13px] text-[#1A1A1A]/30">클릭 또는 드래그</p>
+              <p className="mt-1 text-[10px] text-[#1A1A1A]/15">JPG · PNG · PDF · XLSX</p>
             </>
           )}
         </div>
-        <input
-          ref={estimateRef}
-          type="file"
-          className="hidden"
-          accept={ACCEPTED.estimate}
-          onChange={(e) => e.target.files?.[0] && setEstimateFile(e.target.files[0])}
-        />
+        <input ref={ref} type="file" className="hidden" accept=".jpg,.jpeg,.png,.pdf,.xlsx" onChange={(e) => e.target.files?.[0] && setFile(e.target.files[0])} />
       </div>
 
-      {/* Floorplan upload */}
+      {/* Floorplan */}
       <div>
-        <label className="mb-2 block text-sm font-semibold text-gray-800">
-          도면 업로드 <span className="text-xs font-normal text-gray-400">(선택)</span>
-        </label>
+        <p className="text-[10px] tracking-[0.3em] text-[#1A1A1A]/25">도면 <span className="text-[#1A1A1A]/10">(선택)</span></p>
         <div
-          onClick={() => floorplanRef.current?.click()}
-          onDragOver={(e) => { e.preventDefault(); setDragOver("floorplan"); }}
-          onDragLeave={() => setDragOver(null)}
-          onDrop={(e) => handleDrop(e, "floorplan")}
-          className={`cursor-pointer rounded-2xl border-2 border-dashed p-8 text-center transition-all ${
-            dragOver === "floorplan"
-              ? "border-orange-400 bg-orange-50"
-              : floorplanFile
-              ? "border-orange-300 bg-orange-50/50"
-              : "border-gray-200 hover:border-orange-300"
-          }`}
+          onClick={() => fpRef.current?.click()}
+          className="mt-4 cursor-pointer border border-[#1A1A1A]/[0.04] py-8 text-center transition hover:border-[#1A1A1A]/[0.08]"
         >
-          {floorplanFile ? (
+          {floorplan ? (
             <div className="flex items-center justify-center gap-3">
-              <ImageIcon className="h-5 w-5 text-orange-500" />
-              <span className="text-sm font-medium text-gray-800">{floorplanFile.name}</span>
-              <button
-                onClick={(e) => { e.stopPropagation(); setFloorplanFile(null); }}
-                className="rounded-full p-1 text-gray-400 hover:bg-gray-200"
-              >
-                <X className="h-4 w-4" />
-              </button>
+              <span className="text-[12px] text-[#1A1A1A]/40">{floorplan.name}</span>
+              <button onClick={(e) => { e.stopPropagation(); setFloorplan(null); }}><X className="h-3 w-3 text-[#1A1A1A]/15" /></button>
             </div>
           ) : (
-            <>
-              <ImageIcon className="mx-auto h-7 w-7 text-gray-300" />
-              <p className="mt-2 text-xs text-gray-400">
-                도면이 있으면 더 정확한 분석이 가능합니다
-              </p>
-            </>
+            <p className="text-[11px] text-[#1A1A1A]/15">도면이 있으면 정밀 분석이 가능합니다</p>
           )}
         </div>
-        <input
-          ref={floorplanRef}
-          type="file"
-          className="hidden"
-          accept={ACCEPTED.floorplan}
-          onChange={(e) => e.target.files?.[0] && setFloorplanFile(e.target.files[0])}
-        />
+        <input ref={fpRef} type="file" className="hidden" accept=".jpg,.jpeg,.png,.pdf" onChange={(e) => e.target.files?.[0] && setFloorplan(e.target.files[0])} />
       </div>
 
-      {/* Apartment info */}
-      <div className="grid gap-4 sm:grid-cols-3">
-        <div>
-          <label className="mb-1.5 block text-sm font-semibold text-gray-800">평수</label>
-          <input
-            type="number"
-            placeholder="예: 32"
-            value={areaPy}
-            onChange={(e) => setAreaPy(e.target.value)}
-            className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm transition focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400/20"
-          />
-        </div>
-        <div>
-          <label className="mb-1.5 block text-sm font-semibold text-gray-800">
-            아파트명 <span className="text-xs font-normal text-gray-400">(선택)</span>
-          </label>
-          <input
-            type="text"
-            placeholder="예: 래미안"
-            value={apartmentName}
-            onChange={(e) => setApartmentName(e.target.value)}
-            className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm transition focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400/20"
-          />
-        </div>
-        <div>
-          <label className="mb-1.5 block text-sm font-semibold text-gray-800">
-            지역 <span className="text-xs font-normal text-gray-400">(선택)</span>
-          </label>
-          <input
-            type="text"
-            placeholder="예: 서울 강남"
-            value={region}
-            onChange={(e) => setRegion(e.target.value)}
-            className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm transition focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400/20"
-          />
-        </div>
+      {/* Info */}
+      <div className="grid gap-6 md:grid-cols-3">
+        {[
+          { label: "평수", value: areaPy, set: setAreaPy, placeholder: "32", type: "number" as const },
+          { label: "아파트명", value: apartment, set: setApartment, placeholder: "래미안", type: "text" as const },
+          { label: "지역", value: region, set: setRegion, placeholder: "서울", type: "text" as const },
+        ].map((f) => (
+          <div key={f.label}>
+            <p className="text-[10px] tracking-[0.3em] text-[#1A1A1A]/25">{f.label}</p>
+            <input
+              type={f.type}
+              value={f.value}
+              onChange={(e) => f.set(e.target.value)}
+              placeholder={f.placeholder}
+              className="mt-3 w-full border-b border-[#1A1A1A]/[0.06] bg-transparent pb-2 text-[14px] text-[#1A1A1A] outline-none transition-colors focus:border-[#1A1A1A]/20"
+            />
+          </div>
+        ))}
       </div>
 
+      {/* Submit */}
       <button
-        onClick={handleSubmit}
-        disabled={!estimateFile || isLoading}
-        className="w-full rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-orange-500/25 transition hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100"
+        onClick={() => file && onUploadComplete({ estimateFile: file, floorplanFile: floorplan || undefined, apartmentName: apartment || undefined, areaPy: areaPy ? Number(areaPy) : undefined, region: region || undefined })}
+        disabled={!file || isLoading}
+        className="w-full border-b border-[#1A1A1A] pb-1 text-center text-[13px] font-medium text-[#1A1A1A] transition-all duration-500 hover:border-[#FF6B35] hover:text-[#FF6B35] disabled:border-[#1A1A1A]/10 disabled:text-[#1A1A1A]/20"
       >
-        {isLoading ? "분석 중..." : "견적서 분석 시작"}
+        {isLoading ? "분석 중..." : "분석하기"}
       </button>
     </div>
   );

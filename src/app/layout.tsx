@@ -16,14 +16,9 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "인테리봇 AI — 인테리어, 전문가 없이도 똑똑하게",
+  title: "인테리봇 AI — 당신의 인테리어에 확신을",
   description:
-    "121,515건 시장 데이터 기반 AI 견적서 감사, 성향분석, 집값 분석, 상담 서비스",
-  openGraph: {
-    title: "인테리봇 AI",
-    description: "인테리어, 전문가 없이도 똑똑하게",
-    type: "website",
-  },
+    "121,515건 시장 데이터 기반. 견적서 감사, 성향분석, 집값 분석.",
 };
 
 export default function RootLayout({
@@ -32,16 +27,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={`${geistMono.variable} h-full antialiased`}>
+    <html lang="ko" className={`${geistMono.variable} h-full`}>
       <head>
         <link
           rel="stylesheet"
-          as="style"
           crossOrigin="anonymous"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
         />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;400;700;900&display=swap"
+        />
       </head>
-      <body className="flex min-h-full flex-col font-pretendard">
+      <body className="flex min-h-full flex-col bg-[#FAF9F7] font-pretendard text-[#1A1A1A] antialiased">
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

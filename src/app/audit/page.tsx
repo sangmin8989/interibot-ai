@@ -7,9 +7,8 @@ import AuditReportView from "@/components/audit/AuditReport";
 import { FadeIn, AnimatedBar } from "@/components/shared/motion";
 import { DEMO_AUDIT_REPORT, formatWon, getStatusColor } from "@/lib/demo-data";
 import type { AuditReport } from "@/types";
-import { CheckCircle, Loader2 } from "lucide-react";
 
-const ease = [0.22, 1, 0.36, 1] as const;
+const ease = [0.16, 1, 0.3, 1] as const;
 const STEPS = ["수신", "추출", "비교", "탐지", "생성"];
 
 export default function AuditPage() {
@@ -22,13 +21,11 @@ export default function AuditPage() {
   useEffect(() => {
     if (!isLoading) return;
     setStep(0);
-    const timers = STEPS.map((_, i) => setTimeout(() => setStep(i), i * 1500));
-    return () => timers.forEach(clearTimeout);
+    const t = STEPS.map((_, i) => setTimeout(() => setStep(i), i * 1500));
+    return () => t.forEach(clearTimeout);
   }, [isLoading]);
 
-  const handleUpload = async (data: {
-    estimateFile: File; floorplanFile?: File; apartmentName?: string; areaPy?: number; region?: string;
-  }) => {
+  const handleUpload = async (data: { estimateFile: File; floorplanFile?: File; apartmentName?: string; areaPy?: number; region?: string }) => {
     setIsLoading(true); setError(null);
     try {
       const fd = new FormData();
@@ -48,8 +45,8 @@ export default function AuditPage() {
 
   if (report) {
     return (
-      <div className="min-h-screen bg-[#FAFAF9] pt-20">
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mx-auto max-w-4xl px-6 py-12">
+      <div className="min-h-screen bg-[#FAF9F7] pt-24">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, ease }} className="mx-auto max-w-3xl px-6 py-12">
           <AuditReportView report={report} />
         </motion.div>
       </div>
@@ -57,49 +54,47 @@ export default function AuditPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero — value first */}
-      <section className="relative overflow-hidden bg-[#FAFAF9] px-6 pt-28 pb-24">
-        <div className="pointer-events-none absolute -right-20 top-0 select-none text-[30vw] font-black leading-none text-neutral-100/50">
-          P
-        </div>
-        <div className="relative z-10 mx-auto max-w-5xl">
+    <div className="min-h-screen bg-[#FAF9F7]">
+      {/* Value first */}
+      <section className="px-6 pt-28 pb-20 md:pt-36">
+        <div className="mx-auto max-w-6xl">
           <FadeIn>
-            <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-[#FF6B35]/60">Audit</p>
-            <h1 className="mt-4 text-[clamp(2rem,5vw,3.5rem)] font-black leading-[1.1] tracking-tight text-neutral-900">
-              견적서를 올리면
-              <br /><span className="text-neutral-300">이걸 알 수 있습니다.</span>
+            <p className="text-[10px] tracking-[0.4em] text-[#1A1A1A]/25">AUDIT</p>
+            <h1 className="mt-6 max-w-lg font-serif text-[clamp(1.75rem,4vw,3rem)] font-light leading-[1.3] text-[#1A1A1A]">
+              당신의 견적서가<br />어디에 위치하는지.
             </h1>
           </FadeIn>
 
-          {/* Live demo report */}
-          <FadeIn delay={0.2} className="mt-12 max-w-2xl">
-            <div className="overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-lg">
-              <div className="border-b border-neutral-50 px-5 py-3">
-                <span className="text-xs font-medium text-neutral-400">감사 리포트 — {DEMO_AUDIT_REPORT.apartment}</span>
+          {/* Demo */}
+          <FadeIn delay={0.2} className="mt-16 max-w-lg">
+            <div className="overflow-hidden rounded-sm border border-[#1A1A1A]/[0.06] bg-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.06)]">
+              <div className="border-b border-[#1A1A1A]/[0.04] px-6 py-4">
+                <p className="text-[10px] tracking-[0.3em] text-[#1A1A1A]/20">SAMPLE REPORT</p>
               </div>
-              <div className="divide-y divide-neutral-50">
+              <div className="px-6 py-5 space-y-4">
                 {DEMO_AUDIT_REPORT.processes.map((p) => {
                   const sc = getStatusColor(p.status);
                   return (
-                    <div key={p.name} className="flex items-center gap-3 px-5 py-3">
-                      <span className="w-12 text-[11px] font-medium text-neutral-500">{p.name.replace("공사","")}</span>
-                      <div className="flex-1"><AnimatedBar percent={p.percentile} color={sc.bar} className="h-1.5" /></div>
-                      <span className="font-mono text-[10px] text-neutral-300">P{p.percentile}</span>
-                      <span className="font-mono text-[10px] text-neutral-400">{formatWon(p.amount)}</span>
-                      <span className={`rounded px-1.5 py-0.5 text-[9px] font-bold ${sc.bg} ${sc.text}`}>{p.status}</span>
+                    <div key={p.name} className="space-y-1.5">
+                      <div className="flex items-baseline justify-between">
+                        <span className="text-[12px] text-[#1A1A1A]/50">{p.name}</span>
+                        <span className={`text-[10px] font-medium ${
+                          p.status === "PASS" ? "text-[#1A1A1A]/20" : p.status === "WARN" ? "text-[#C68A2E]" : "text-[#C44B3F]"
+                        }`}>{p.status}</span>
+                      </div>
+                      <AnimatedBar percent={p.percentile} color={sc.bar} />
                     </div>
                   );
                 })}
               </div>
-              <div className="px-5 py-2.5 text-[9px] text-amber-500">
-                {DEMO_AUDIT_REPORT.warnings.map((w) => <p key={w}>⚠ {w}</p>)}
+              <div className="border-t border-[#1A1A1A]/[0.04] px-6 py-3">
+                <p className="text-[9px] text-[#1A1A1A]/15">{DEMO_AUDIT_REPORT.data_source}</p>
               </div>
             </div>
           </FadeIn>
 
-          <FadeIn delay={0.3} className="mt-8">
-            <button onClick={() => formRef.current?.scrollIntoView({ behavior: "smooth" })} className="text-sm font-medium text-[#FF6B35]">
+          <FadeIn delay={0.4} className="mt-10">
+            <button onClick={() => formRef.current?.scrollIntoView({ behavior: "smooth" })} className="border-b border-[#1A1A1A]/20 pb-0.5 text-[12px] text-[#1A1A1A]/40 transition hover:border-[#1A1A1A] hover:text-[#1A1A1A]">
               내 견적서 분석하기 ↓
             </button>
           </FadeIn>
@@ -107,26 +102,24 @@ export default function AuditPage() {
       </section>
 
       {/* Upload */}
-      <section ref={formRef} className="px-6 py-20">
-        <div className="mx-auto max-w-xl">
+      <section ref={formRef} className="border-t border-[#1A1A1A]/[0.04] bg-white px-6 py-20">
+        <div className="mx-auto max-w-lg">
           <AnimatePresence mode="wait">
             {isLoading ? (
-              <motion.div key="load" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center py-16">
-                <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#FF6B35] border-t-transparent" />
-                <div className="mt-8 flex gap-3">
+              <motion.div key="load" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="py-20 text-center">
+                <div className="mx-auto h-6 w-6 animate-spin rounded-full border border-[#1A1A1A]/10 border-t-[#1A1A1A]/40" />
+                <div className="mt-10 flex justify-center gap-4">
                   {STEPS.map((s, i) => (
-                    <div key={s} className={`flex h-8 w-8 items-center justify-center rounded-full text-[10px] font-bold transition-all ${
-                      i < step ? "bg-emerald-500 text-white" : i === step ? "bg-[#FF6B35] text-white animate-pulse" : "bg-neutral-100 text-neutral-300"
-                    }`}>
-                      {i < step ? <CheckCircle className="h-3.5 w-3.5" /> : i === step ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : i + 1}
-                    </div>
+                    <span key={s} className={`font-mono text-[10px] transition-all duration-500 ${i <= step ? "text-[#1A1A1A]/50" : "text-[#1A1A1A]/10"}`}>
+                      {s}
+                    </span>
                   ))}
                 </div>
               </motion.div>
             ) : (
-              <motion.div key="form" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+              <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                 <FileUpload onUploadComplete={handleUpload} isLoading={isLoading} />
-                {error && <p className="mt-4 text-sm text-red-500">{error}</p>}
+                {error && <p className="mt-4 text-[12px] text-[#C44B3F]">{error}</p>}
               </motion.div>
             )}
           </AnimatePresence>

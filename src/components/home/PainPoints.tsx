@@ -2,78 +2,37 @@
 
 import { FadeIn } from "@/components/shared/motion";
 
+/* Hermès: problems stated with the quiet authority of a connoisseur */
+
+const points = [
+  { num: "01", title: "견적의 불투명함", desc: "동일한 평수, 동일한 공정. 그런데 업체마다 수천만원이 다릅니다. 구조를 모르면 판단할 수 없습니다." },
+  { num: "02", title: "기준의 부재", desc: "자재비, 인건비, 간접비. 어디가 합리적이고 어디가 과한지, 비교할 기준이 없었습니다." },
+  { num: "03", title: "보이지 않는 누락", desc: "빠진 공정은 이후 추가 비용이 됩니다. 전문가 없이는 발견하기 어렵습니다." },
+];
+
 export default function PainPoints() {
   return (
-    <section className="relative overflow-hidden bg-white px-6 py-28 md:py-36">
-      {/* Giant background question mark — Picasso: symbol as texture */}
-      <div className="pointer-events-none absolute -right-20 top-0 select-none text-[40vw] font-black leading-none text-neutral-50">
-        ?
-      </div>
-
-      <div className="relative z-10 mx-auto max-w-6xl">
+    <section className="bg-white px-6 py-32 md:py-40">
+      <div className="mx-auto max-w-6xl">
         <FadeIn>
-          <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-[#FF6B35]/60">
-            Problem
-          </p>
-          <h2 className="mt-4 max-w-2xl text-[clamp(1.75rem,4vw,3rem)] font-black leading-[1.1] tracking-tight text-neutral-900">
-            당신이 받은 견적서,
-            <br />
-            <span className="text-neutral-300">정말 적정가입니까.</span>
+          <p className="text-[10px] tracking-[0.4em] text-[#1A1A1A]/25">PROBLEM</p>
+          <h2 className="mt-6 max-w-lg font-serif text-[clamp(1.5rem,3.5vw,2.5rem)] font-light leading-[1.3] text-[#1A1A1A]">
+            견적서 한 장에<br />수천만원이 달라집니다.
           </h2>
         </FadeIn>
 
-        {/* Irregular grid — Picasso: deliberate asymmetry */}
-        <div className="mt-16 grid gap-4 md:grid-cols-12">
-          <FadeIn delay={0.1} className="md:col-span-5">
-            <div className="group relative overflow-hidden rounded-3xl bg-neutral-950 p-8 transition-all hover:scale-[1.02]">
-              <span className="absolute -right-4 -top-4 text-[8rem] font-black leading-none text-white/[0.03]">01</span>
-              <p className="relative text-xs font-medium uppercase tracking-widest text-[#FF6B35]">Gap</p>
-              <p className="relative mt-3 text-xl font-bold text-white">
-                동일 평수, 3,000만원 차이
-              </p>
-              <p className="relative mt-2 text-sm leading-relaxed text-white/40">
-                같은 32평 올수리인데 업체마다 가격이 다릅니다. 구조를 모르면 판단할 수 없습니다.
-              </p>
-            </div>
-          </FadeIn>
-
-          <FadeIn delay={0.2} className="md:col-span-7">
-            <div className="group relative overflow-hidden rounded-3xl border border-neutral-100 bg-white p-8 transition-all hover:shadow-xl">
-              <span className="absolute -right-4 -top-4 text-[8rem] font-black leading-none text-neutral-50">02</span>
-              <p className="relative text-xs font-medium uppercase tracking-widest text-[#FF6B35]">Blind</p>
-              <p className="relative mt-3 text-xl font-bold text-neutral-900">
-                자재비, 인건비, 간접비 — 구조가 안 보인다
-              </p>
-              <p className="relative mt-2 text-sm leading-relaxed text-neutral-500">
-                견적서를 받아도 어디가 합리적이고 어디가 과한지 비교할 기준이 없습니다.
-              </p>
-            </div>
-          </FadeIn>
-
-          <FadeIn delay={0.3} className="md:col-span-8">
-            <div className="group relative overflow-hidden rounded-3xl bg-[#FAFAF9] p-8 transition-all hover:shadow-lg">
-              <span className="absolute -right-4 -top-4 text-[8rem] font-black leading-none text-neutral-100/50">03</span>
-              <p className="relative text-xs font-medium uppercase tracking-widest text-[#FF6B35]">Risk</p>
-              <p className="relative mt-3 text-xl font-bold text-neutral-900">
-                누락된 공정은 나중에 추가 비용이 됩니다
-              </p>
-              <p className="relative mt-2 text-sm leading-relaxed text-neutral-500">
-                빠진 항목, 부풀린 항목을 전문가 없이 찾기 어렵습니다.
-              </p>
-            </div>
-          </FadeIn>
-
-          <FadeIn delay={0.35} className="flex items-center md:col-span-4">
-            <a
-              href="#features"
-              className="group flex items-center gap-2 text-sm font-semibold text-[#FF6B35] transition hover:gap-3"
-            >
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FF6B35] text-white transition-transform group-hover:scale-110">
-                →
-              </span>
-              <span>해결하기</span>
-            </a>
-          </FadeIn>
+        <div className="mt-20 space-y-0">
+          {points.map((p, i) => (
+            <FadeIn key={p.num} delay={i * 0.15}>
+              <div className="flex gap-8 border-t border-[#1A1A1A]/[0.06] py-10 md:gap-16">
+                <span className="font-mono text-[11px] text-[#1A1A1A]/15">{p.num}</span>
+                <div className="max-w-md">
+                  <h3 className="font-serif text-lg font-normal text-[#1A1A1A]">{p.title}</h3>
+                  <p className="mt-2 text-[14px] leading-[1.8] text-[#1A1A1A]/40">{p.desc}</p>
+                </div>
+              </div>
+            </FadeIn>
+          ))}
         </div>
       </div>
     </section>
