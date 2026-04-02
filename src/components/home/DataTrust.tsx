@@ -23,7 +23,7 @@ export default function DataTrust() {
                 <span className="font-serif text-[clamp(2rem,4vw,3rem)] font-light tracking-tight text-[#C9A96E]">
                   <CountUp target={s.target} suffix={s.suffix} />
                 </span>
-                <p className="mt-3 text-[10px] tracking-[0.2em] text-white/15">{s.label}</p>
+                <p className="mt-3 text-[10px] tracking-[0.2em] text-white/50">{s.label}</p>
               </div>
             </FadeIn>
           ))}

@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col gap-6 md:flex-row md:items-center md:justify-between">
         <div className="flex items-baseline gap-3">
           <span className="text-[11px] font-bold tracking-[0.15em] text-black/40">INTERIBOT</span>
-          <span className="text-[9px] text-black/15">&copy; 2026 아르젠 스튜디오</span>
+          <span className="text-[9px] text-black/45">&copy; 2026 아르젠 스튜디오</span>
         </div>
         <div className="flex gap-8">
           {[
@@ -14,7 +14,7 @@ export default function Footer() {
             { l: "집값", h: "/hvi" }, { l: "상담", h: "/chat" },
             { l: "이용약관", h: "#" }, { l: "개인정보", h: "#" },
           ].map((i) => (
-            <Link key={i.l} href={i.h} className="text-[9px] tracking-[0.05em] text-black/15 transition-colors duration-500 hover:text-black/40">
+            <Link key={i.l} href={i.h} className="text-[9px] tracking-[0.05em] text-black/45 transition-colors duration-500 hover:text-black/70">
               {i.l}
             </Link>
           ))}

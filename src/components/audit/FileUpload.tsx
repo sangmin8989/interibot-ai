@@ -24,7 +24,7 @@ export default function FileUpload({ onUploadComplete, isLoading }: Props) {
     <div className="space-y-10">
       {/* Main upload */}
       <div>
-        <p className="text-[10px] tracking-[0.3em] text-[#1A1A1A]/25">견적서</p>
+        <p className="text-[10px] tracking-[0.3em] text-[#1A1A1A]/50">견적서</p>
         <div
           onClick={() => ref.current?.click()}
           onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
@@ -37,15 +37,15 @@ export default function FileUpload({ onUploadComplete, isLoading }: Props) {
           {file ? (
             <div className="flex items-center justify-center gap-3">
               <span className="text-[13px] text-[#1A1A1A]/60">{file.name}</span>
-              <button onClick={(e) => { e.stopPropagation(); setFile(null); }} className="text-[#1A1A1A]/20 hover:text-[#1A1A1A]/40">
+              <button onClick={(e) => { e.stopPropagation(); setFile(null); }} className="text-[#1A1A1A]/50 hover:text-[#1A1A1A]/40">
                 <X className="h-4 w-4" />
               </button>
             </div>
           ) : (
             <>
-              <Upload className="mx-auto h-5 w-5 text-[#1A1A1A]/15" />
+              <Upload className="mx-auto h-5 w-5 text-[#1A1A1A]/45" />
               <p className="mt-3 text-[13px] text-[#1A1A1A]/30">클릭 또는 드래그</p>
-              <p className="mt-1 text-[10px] text-[#1A1A1A]/15">JPG · PNG · PDF · XLSX</p>
+              <p className="mt-1 text-[10px] text-[#1A1A1A]/45">JPG · PNG · PDF · XLSX</p>
             </>
           )}
         </div>
@@ -54,7 +54,7 @@ export default function FileUpload({ onUploadComplete, isLoading }: Props) {
 
       {/* Floorplan */}
       <div>
-        <p className="text-[10px] tracking-[0.3em] text-[#1A1A1A]/25">도면 <span className="text-[#1A1A1A]/10">(선택)</span></p>
+        <p className="text-[10px] tracking-[0.3em] text-[#1A1A1A]/50">도면 <span className="text-[#1A1A1A]/40">(선택)</span></p>
         <div
           onClick={() => fpRef.current?.click()}
           className="mt-4 cursor-pointer border border-[#1A1A1A]/[0.04] py-8 text-center transition hover:border-[#1A1A1A]/[0.08]"
@@ -62,10 +62,10 @@ export default function FileUpload({ onUploadComplete, isLoading }: Props) {
           {floorplan ? (
             <div className="flex items-center justify-center gap-3">
               <span className="text-[12px] text-[#1A1A1A]/40">{floorplan.name}</span>
-              <button onClick={(e) => { e.stopPropagation(); setFloorplan(null); }}><X className="h-3 w-3 text-[#1A1A1A]/15" /></button>
+              <button onClick={(e) => { e.stopPropagation(); setFloorplan(null); }}><X className="h-3 w-3 text-[#1A1A1A]/45" /></button>
             </div>
           ) : (
-            <p className="text-[11px] text-[#1A1A1A]/15">도면이 있으면 정밀 분석이 가능합니다</p>
+            <p className="text-[11px] text-[#1A1A1A]/45">도면이 있으면 정밀 분석이 가능합니다</p>
           )}
         </div>
         <input ref={fpRef} type="file" className="hidden" accept=".jpg,.jpeg,.png,.pdf" onChange={(e) => e.target.files?.[0] && setFloorplan(e.target.files[0])} />
@@ -79,7 +79,7 @@ export default function FileUpload({ onUploadComplete, isLoading }: Props) {
           { label: "지역", value: region, set: setRegion, placeholder: "서울", type: "text" as const },
         ].map((f) => (
           <div key={f.label}>
-            <p className="text-[10px] tracking-[0.3em] text-[#1A1A1A]/25">{f.label}</p>
+            <p className="text-[10px] tracking-[0.3em] text-[#1A1A1A]/50">{f.label}</p>
             <input
               type={f.type}
               value={f.value}
@@ -95,7 +95,7 @@ export default function FileUpload({ onUploadComplete, isLoading }: Props) {
       <button
         onClick={() => file && onUploadComplete({ estimateFile: file, floorplanFile: floorplan || undefined, apartmentName: apartment || undefined, areaPy: areaPy ? Number(areaPy) : undefined, region: region || undefined })}
         disabled={!file || isLoading}
-        className="w-full border-b border-[#1A1A1A] pb-1 text-center text-[13px] font-medium text-[#1A1A1A] transition-all duration-500 hover:border-[#C9A96E] hover:text-[#C9A96E] disabled:border-[#1A1A1A]/10 disabled:text-[#1A1A1A]/20"
+        className="w-full border-b border-[#1A1A1A] pb-1 text-center text-[13px] font-medium text-[#1A1A1A] transition-all duration-500 hover:border-[#C9A96E] hover:text-[#C9A96E] disabled:border-[#1A1A1A]/10 disabled:text-[#1A1A1A]/300"
       >
         {isLoading ? "분석 중..." : "분석하기"}
       </button>

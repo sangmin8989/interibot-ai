@@ -29,7 +29,7 @@ export default function ChatUI() {
       <div className="flex-1 overflow-y-auto px-6 py-8">
         {messages.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center">
-            <p className="font-serif text-2xl font-light text-[#1A1A1A]/20">물어보세요.</p>
+            <p className="font-serif text-2xl font-light text-[#1A1A1A]/50">물어보세요.</p>
             <div className="mt-10 grid max-w-sm grid-cols-2 gap-3">
               {SUGGESTED_QUESTIONS.map((q) => (
                 <button
@@ -47,7 +47,7 @@ export default function ChatUI() {
             {messages.map((m) => <MessageBubble key={m.id} message={m} />)}
             {isLoading && messages[messages.length - 1]?.role === "user" && (
               <div className="flex justify-start">
-                <span className="text-[12px] text-[#1A1A1A]/20">...</span>
+                <span className="text-[12px] text-[#1A1A1A]/50">...</span>
               </div>
             )}
             <div ref={bottomRef} />
@@ -69,7 +69,7 @@ export default function ChatUI() {
           <button
             onClick={() => send(input)}
             disabled={!input.trim() || isLoading}
-            className="pb-2 text-[#1A1A1A]/20 transition-colors hover:text-[#1A1A1A] disabled:text-[#1A1A1A]/5"
+            className="pb-2 text-[#1A1A1A]/50 transition-colors hover:text-[#1A1A1A] disabled:text-[#1A1A1A]/30"
           >
             <ArrowUp className="h-4 w-4" />
           </button>

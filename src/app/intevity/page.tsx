@@ -40,7 +40,7 @@ export default function IntevityPage() {
     <div className="flex min-h-screen flex-col bg-black">
       <div className="mx-auto flex w-full max-w-md items-center justify-between px-6 pt-24">
         {idx > 0 ? (
-          <button onClick={() => { setIdx(i => i - 1); setSelected(null); }} className="text-[10px] text-white/20 transition hover:text-white/40">←</button>
+          <button onClick={() => { setIdx(i => i - 1); setSelected(null); }} className="text-[10px] text-white/55 transition hover:text-white/70">←</button>
         ) : <span />}
         <span className="font-mono text-[10px] text-[#C9A96E]/30">{idx + 1} — {questions.length}</span>
       </div>
@@ -80,7 +80,7 @@ export default function IntevityPage() {
                     className={`w-full border-b py-5 text-left text-[13px] transition-all duration-500 ${
                       active
                         ? "border-[#C9A96E]/30 text-white"
-                        : "border-white/[0.04] text-white/25 hover:text-white/50"
+                        : "border-white/[0.04] text-white/50 hover:text-white/80"
                     }`}
                   >
                     {opt.label}

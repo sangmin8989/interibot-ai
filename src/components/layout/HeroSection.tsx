@@ -74,7 +74,7 @@ export default function HeroSection() {
             </Link>
             <Link
               href="/intevity"
-              className="text-[12px] tracking-[0.1em] text-black/20 transition-colors duration-500 hover:text-black/50"
+              className="text-[12px] tracking-[0.1em] text-black/40 transition-colors duration-500 hover:text-black/70"
             >
               성향분석
             </Link>
@@ -97,8 +97,8 @@ export default function HeroSection() {
                 { n: "17", l: "공정" },
               ].map((d) => (
                 <div key={d.n} className="flex items-baseline gap-1.5">
-                  <span className="font-mono text-[10px] text-black/15">{d.n}</span>
-                  <span className="text-[9px] text-black/10">{d.l}</span>
+                  <span className="font-mono text-[10px] text-black/45">{d.n}</span>
+                  <span className="text-[9px] text-black/40">{d.l}</span>
                 </div>
               ))}
             </div>

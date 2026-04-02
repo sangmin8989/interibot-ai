@@ -32,7 +32,7 @@ export default function FeatureShowcase() {
               <div className="mt-6">
                 {["화이트 — 절제된 공간", "우드톤 — 자연의 온기", "포인트 — 자기다운 공간"].map((o, i) => (
                   <div key={o} className={`border-b py-4 text-[13px] transition-all duration-500 ${
-                    i === 1 ? "border-[#C9A96E]/20 text-black" : "border-black/[0.04] text-black/20"
+                    i === 1 ? "border-[#C9A96E]/20 text-black" : "border-black/[0.04] text-black/50"
                   }`}>{o}</div>
                 ))}
               </div>
@@ -55,7 +55,7 @@ export default function FeatureShowcase() {
                       <div className="flex items-baseline justify-between">
                         <span className="text-[12px] text-white/40">{p.name}</span>
                         <span className={`text-[10px] ${
-                          p.status === "PASS" ? "text-white/15" : p.status === "WARN" ? "text-[#C9A96E]" : "text-white/60"
+                          p.status === "PASS" ? "text-white/50" : p.status === "WARN" ? "text-[#C9A96E]" : "text-white/60"
                         }`}>{p.status}</span>
                       </div>
                       <AnimatedBar percent={p.percentile} color={p.status === "WARN" ? "bg-[#C9A96E]" : sc.bar} />
@@ -71,10 +71,10 @@ export default function FeatureShowcase() {
             <h3 className="mt-6 font-serif text-[clamp(1.5rem,3vw,2.25rem)] font-light leading-[1.3] text-white">
               견적서를 읽는<br />눈을 드립니다.
             </h3>
-            <p className="mt-6 max-w-sm text-[14px] leading-[2] text-white/25">
+            <p className="mt-6 max-w-sm text-[14px] leading-[2] text-white/55">
               17개 공정이 시장의 어디에 위치하는지. 빠진 항목은 없는지.
             </p>
-            <Link href="/audit" className="mt-8 inline-block border-b border-white/15 pb-0.5 text-[11px] tracking-[0.1em] text-white/30 transition-all duration-500 hover:border-white hover:text-white">
+            <Link href="/audit" className="mt-8 inline-block border-b border-white/15 pb-0.5 text-[11px] tracking-[0.1em] text-white/55 transition-all duration-500 hover:border-white hover:text-white">
               분석하기
             </Link>
           </SlideIn>
@@ -90,10 +90,10 @@ export default function FeatureShowcase() {
               <h3 className="mt-6 font-serif text-xl font-light text-black">
                 공사 후의 가치를<br />미리 봅니다.
               </h3>
-              <p className="mt-4 text-[13px] leading-[2] text-black/25">
+              <p className="mt-4 text-[13px] leading-[2] text-black/50">
                 어떤 공정이 집의 가치에 기여하는지.
               </p>
-              <p className="mt-10 text-[10px] text-black/10 transition-colors duration-500 group-hover:text-[#C9A96E]">→</p>
+              <p className="mt-10 text-[10px] text-black/40 transition-colors duration-500 group-hover:text-[#C9A96E]">→</p>
             </Link>
           </FadeIn>
 
@@ -103,10 +103,10 @@ export default function FeatureShowcase() {
               <h3 className="mt-6 font-serif text-xl font-light text-black">
                 궁금한 것이 있으시면<br />물어보십시오.
               </h3>
-              <p className="mt-4 text-[13px] leading-[2] text-black/25">
+              <p className="mt-4 text-[13px] leading-[2] text-black/50">
                 9,610건의 지식을 학습한 AI가 답변합니다.
               </p>
-              <p className="mt-10 text-[10px] text-black/10 transition-colors duration-500 group-hover:text-[#C9A96E]">→</p>
+              <p className="mt-10 text-[10px] text-black/40 transition-colors duration-500 group-hover:text-[#C9A96E]">→</p>
             </Link>
           </FadeIn>
         </div>

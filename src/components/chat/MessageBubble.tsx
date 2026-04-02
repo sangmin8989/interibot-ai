@@ -24,7 +24,7 @@ export default function MessageBubble({ message }: { message: UIMessage }) {
             {line}
           </p>
         ))}
-        <p className="mt-3 text-[9px] text-[#1A1A1A]/15">시장 데이터 기반</p>
+        <p className="mt-3 text-[9px] text-[#1A1A1A]/45">시장 데이터 기반</p>
       </div>
     </div>
   );

@@ -28,7 +28,7 @@ export default function PainPoints() {
                 <span className="font-mono text-[11px] text-[#C9A96E]/40">{p.num}</span>
                 <div className="max-w-md">
                   <h3 className="font-serif text-lg font-normal text-white">{p.title}</h3>
-                  <p className="mt-2 text-[14px] leading-[1.9] text-white/30">{p.desc}</p>
+                  <p className="mt-2 text-[14px] leading-[1.9] text-white/55">{p.desc}</p>
                 </div>
               </div>
             </FadeIn>

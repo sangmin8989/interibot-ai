@@ -58,7 +58,7 @@ export default function AuditPage() {
       <section className="px-6 pt-28 pb-20 md:pt-36">
         <div className="mx-auto max-w-6xl">
           <FadeIn>
-            <p className="text-[10px] tracking-[0.4em] text-[#1A1A1A]/25">AUDIT</p>
+            <p className="text-[10px] tracking-[0.4em] text-[#1A1A1A]/50">AUDIT</p>
             <h1 className="mt-6 max-w-lg font-serif text-[clamp(1.75rem,4vw,3rem)] font-light leading-[1.3] text-[#1A1A1A]">
               받으신 견적서,<br />기준 위에 올려보겠습니다.
             </h1>
@@ -71,7 +71,7 @@ export default function AuditPage() {
           <FadeIn delay={0.2} className="mt-16 max-w-lg">
             <div className="overflow-hidden rounded-sm border border-[#1A1A1A]/[0.06] bg-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.06)]">
               <div className="border-b border-[#1A1A1A]/[0.04] px-6 py-4">
-                <p className="text-[10px] tracking-[0.3em] text-[#1A1A1A]/15">SAMPLE</p>
+                <p className="text-[10px] tracking-[0.3em] text-[#1A1A1A]/45">SAMPLE</p>
               </div>
               <div className="px-6 py-5 space-y-4">
                 {DEMO_AUDIT_REPORT.processes.map((p) => {
@@ -80,7 +80,7 @@ export default function AuditPage() {
                     <div key={p.name} className="space-y-1.5">
                       <div className="flex items-baseline justify-between">
                         <span className="text-[12px] text-[#1A1A1A]/40">{p.name}</span>
-                        <span className={`text-[10px] ${p.status === "PASS" ? "text-[#1A1A1A]/15" : p.status === "WARN" ? "text-[#C68A2E]" : "text-[#C44B3F]"}`}>{p.status}</span>
+                        <span className={`text-[10px] ${p.status === "PASS" ? "text-[#1A1A1A]/45" : p.status === "WARN" ? "text-[#C68A2E]" : "text-[#C44B3F]"}`}>{p.status}</span>
                       </div>
                       <AnimatedBar percent={p.percentile} color={sc.bar} />
                     </div>
@@ -106,7 +106,7 @@ export default function AuditPage() {
                 <div className="mx-auto h-6 w-6 animate-spin rounded-full border border-[#1A1A1A]/10 border-t-[#1A1A1A]/40" />
                 <div className="mt-10 flex justify-center gap-4">
                   {STEPS.map((s, i) => (
-                    <span key={s} className={`font-mono text-[10px] transition-all duration-700 ${i <= step ? "text-[#1A1A1A]/40" : "text-[#1A1A1A]/10"}`}>{s}</span>
+                    <span key={s} className={`font-mono text-[10px] transition-all duration-700 ${i <= step ? "text-[#1A1A1A]/40" : "text-[#1A1A1A]/40"}`}>{s}</span>
                   ))}
                 </div>
               </motion.div>

@@ -44,17 +44,17 @@ export default function HviPage() {
       <div className="min-h-screen bg-white pt-20">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease }} className="mx-auto max-w-3xl space-y-10 px-6 py-16">
           <div>
-            <p className="text-[10px] tracking-[0.4em] text-[#1A1A1A]/25">RESULT</p>
+            <p className="text-[10px] tracking-[0.4em] text-[#1A1A1A]/50">RESULT</p>
             <h1 className="mt-4 font-serif text-2xl font-light text-[#1A1A1A]">집값 분석 결과</h1>
           </div>
           <HviResultCard result={result} />
           <ValueChart totalCost={totalCost} hvi={result.hvi} />
           <div className="rounded-sm border border-[#1A1A1A]/[0.06] bg-white p-8">
-            <p className="text-[10px] tracking-[0.3em] text-[#1A1A1A]/25">PROCESS ROI</p>
+            <p className="text-[10px] tracking-[0.3em] text-[#1A1A1A]/50">PROCESS ROI</p>
             <div className="mt-4"><ProcessRoi data={result.processRoi} /></div>
           </div>
           <div className="flex justify-center gap-8 pt-6">
-            <button onClick={() => setResult(null)} className="text-[12px] text-[#1A1A1A]/25 transition hover:text-[#1A1A1A]/50">다시 분석</button>
+            <button onClick={() => setResult(null)} className="text-[12px] text-[#1A1A1A]/50 transition hover:text-[#1A1A1A]/50">다시 분석</button>
             <Link href="/chat" className="border-b border-[#1A1A1A] pb-0.5 text-[12px] text-[#1A1A1A] transition hover:border-[#C9A96E] hover:text-[#C9A96E]">상담하기</Link>
           </div>
         </motion.div>
@@ -67,7 +67,7 @@ export default function HviPage() {
       <section className="px-6 pt-28 pb-20 md:pt-36">
         <div className="mx-auto max-w-5xl">
           <FadeIn>
-            <p className="text-[10px] tracking-[0.4em] text-[#1A1A1A]/25">HOME VALUE</p>
+            <p className="text-[10px] tracking-[0.4em] text-[#1A1A1A]/50">HOME VALUE</p>
             <h1 className="mt-6 max-w-md font-serif text-[clamp(1.75rem,4vw,3rem)] font-light leading-[1.3] text-[#1A1A1A]">
               공사 후의 가치를<br />미리 봅니다.
             </h1>
@@ -88,16 +88,16 @@ export default function HviPage() {
         <div className="mx-auto max-w-lg">
           <div className="space-y-8">
             <div>
-              <p className="text-[10px] tracking-[0.3em] text-[#1A1A1A]/25">평수</p>
+              <p className="text-[10px] tracking-[0.3em] text-[#1A1A1A]/50">평수</p>
               <div className="mt-3 flex gap-3">
                 {["25","32","40","45"].map(v => (
-                  <button key={v} onClick={() => setAreaPy(v)} className={`pb-1 text-[13px] transition-all duration-500 ${areaPy === v ? "border-b border-[#1A1A1A] text-[#1A1A1A]" : "text-[#1A1A1A]/20 hover:text-[#1A1A1A]/40"}`}>{v}</button>
+                  <button key={v} onClick={() => setAreaPy(v)} className={`pb-1 text-[13px] transition-all duration-500 ${areaPy === v ? "border-b border-[#1A1A1A] text-[#1A1A1A]" : "text-[#1A1A1A]/50 hover:text-[#1A1A1A]/40"}`}>{v}</button>
                 ))}
               </div>
             </div>
 
             <div>
-              <p className="text-[10px] tracking-[0.3em] text-[#1A1A1A]/25">공정별 금액 <span className="text-[#1A1A1A]/10">(만원)</span></p>
+              <p className="text-[10px] tracking-[0.3em] text-[#1A1A1A]/50">공정별 금액 <span className="text-[#1A1A1A]/40">(만원)</span></p>
               <div className="mt-4 grid gap-4 sm:grid-cols-2">
                 {ALL_PROCESSES.map(p => (
                   <div key={p} className="flex items-center gap-3">
@@ -117,7 +117,7 @@ export default function HviPage() {
             <button
               onClick={handleAnalyze}
               disabled={isLoading}
-              className="w-full border-b border-[#1A1A1A] pb-1 text-center text-[13px] font-medium text-[#1A1A1A] transition-all duration-500 hover:border-[#C9A96E] hover:text-[#C9A96E] disabled:border-[#1A1A1A]/10 disabled:text-[#1A1A1A]/15"
+              className="w-full border-b border-[#1A1A1A] pb-1 text-center text-[13px] font-medium text-[#1A1A1A] transition-all duration-500 hover:border-[#C9A96E] hover:text-[#C9A96E] disabled:border-[#1A1A1A]/10 disabled:text-[#1A1A1A]/45"
             >
               {isLoading ? "분석 중..." : "분석하기"}
             </button>
