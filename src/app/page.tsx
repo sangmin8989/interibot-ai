@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import { DEMO_AUDIT_REPORT, formatWon, getStatusColor } from "@/lib/demo-data";
@@ -108,6 +108,80 @@ const services = [
   { label: "집값 분석", desc: "리모델링 후\n예상 가치 상승", href: "/hvi", accent: "bg-[#C9A96E]" },
   { label: "AI 상담", desc: "9,610건 지식 기반\n전문 답변", href: "/chat", accent: "bg-black" },
 ];
+
+/* ── GSAP Horizontal Scroll Services ── */
+function HorizontalServices() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let ctx: { revert: () => void } | null = null;
+    (async () => {
+      const gsapModule = await import("gsap");
+      const stModule = await import("gsap/ScrollTrigger");
+      const gsap = gsapModule.default || gsapModule;
+      const ScrollTrigger = stModule.ScrollTrigger || stModule.default;
+      gsap.registerPlugin(ScrollTrigger);
+
+      const track = trackRef.current;
+      const container = containerRef.current;
+      if (!track || !container) return;
+
+      const totalScroll = track.scrollWidth - window.innerWidth;
+
+      ctx = gsap.context(() => {
+        gsap.to(track, {
+          x: -totalScroll,
+          ease: "none",
+          scrollTrigger: {
+            trigger: container,
+            pin: true,
+            pinSpacing: true,
+            scrub: 1,
+            end: `+=${totalScroll}`,
+            invalidateOnRefresh: true,
+            anticipatePin: 1,
+          },
+        });
+      });
+    })();
+    return () => { ctx?.revert(); };
+  }, []);
+
+  return (
+    <section ref={containerRef} className="relative overflow-hidden bg-black">
+      <div ref={trackRef} className="flex h-screen w-max items-center">
+        {/* Intro panel */}
+        <div className="flex h-screen w-screen shrink-0 flex-col justify-center px-8 md:px-24">
+          <p className="text-[9px] tracking-[0.5em] text-[#C9A96E]">SERVICES</p>
+          <h2 className="mt-4 font-serif text-[clamp(2rem,5vw,3.5rem)] font-light text-white">네 가지 도구.</h2>
+          <p className="mt-4 text-[13px] text-white/30">스크롤하여 살펴보세요 →</p>
+        </div>
+
+        {/* Service panels */}
+        {services.map((s, i) => (
+          <div key={s.label} className="flex h-screen w-screen shrink-0 items-center px-8 md:px-24">
+            <div className="w-full max-w-lg">
+              <div className={`h-1 w-8 rounded-full ${s.accent} opacity-40`} />
+              <h3 className="mt-6 font-serif text-[clamp(1.5rem,3vw,2.25rem)] font-light text-white">
+                {s.label}
+              </h3>
+              <p className="mt-4 whitespace-pre-line text-[14px] leading-[2] text-white/35">
+                {s.desc}
+              </p>
+              <Link
+                href={s.href}
+                className="relative z-10 mt-8 inline-block border-b border-white/15 px-1 py-2 pb-1 text-[11px] tracking-[0.1em] text-white/40 transition-all duration-500 hover:border-white hover:text-white"
+              >
+                시작하기
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 export default function Home() {
   const scrollRef = useRef(null);
@@ -293,31 +367,8 @@ export default function Home() {
         </VelocityMarquee>
       </div>
 
-      {/* ═══ Screen 3: Services — horizontal scroll on mobile ═══ */}
-      <section className="bg-white px-6 py-20 md:py-32">
-        <div className="mx-auto max-w-5xl">
-          <FadeIn>
-            <p className="text-[9px] tracking-[0.5em] text-[#C9A96E]">SERVICES</p>
-            <h2 className="mt-4 font-serif text-[clamp(1.5rem,3.5vw,2.5rem)] font-light text-black">네 가지 도구.</h2>
-          </FadeIn>
-        </div>
-
-        {/* Mobile: horizontal scroll. Desktop: grid */}
-        <div className="mt-10 flex gap-4 overflow-x-auto px-6 pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-auto md:grid md:max-w-5xl md:grid-cols-4 md:overflow-visible md:px-0">
-          {services.map((s, i) => (
-            <FadeIn key={s.label} delay={i * 0.08}>
-              <Link href={s.href} className="group block w-[260px] shrink-0 md:w-auto">
-                <div className="flex h-full flex-col border border-black/[0.06] p-7 transition-all duration-500 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.06)] active:scale-[0.98]">
-                  <div className={`h-1 w-6 rounded-full ${s.accent} opacity-40`} />
-                  <h3 className="mt-5 text-[15px] font-medium text-black">{s.label}</h3>
-                  <p className="mt-2 whitespace-pre-line text-[12px] leading-[1.7] text-black/35">{s.desc}</p>
-                  <p className="mt-auto pt-6 text-[10px] text-black/15 transition-colors duration-500 group-hover:text-[#C9A96E]">→</p>
-                </div>
-              </Link>
-            </FadeIn>
-          ))}
-        </div>
-      </section>
+      {/* ═══ Screen 3: Services — GSAP horizontal scroll ═══ */}
+      <HorizontalServices />
 
       {/* ═══ Screen 4: Feature details — left/right alternating ═══ */}
       <section className="bg-white px-6 py-20 md:py-32">
