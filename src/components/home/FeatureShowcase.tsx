@@ -1,230 +1,137 @@
 "use client";
 
 import Link from "next/link";
-import { SlideIn } from "@/components/shared/motion";
-import { Sparkles, ClipboardCheck, TrendingUp, MessageCircle } from "lucide-react";
-import { DEMO_AUDIT_REPORT, getStatusColor, formatWon, DEMO_HVI } from "@/lib/demo-data";
-import { AnimatedBar } from "@/components/shared/motion";
+import { FadeIn, AnimatedBar } from "@/components/shared/motion";
+import { DEMO_AUDIT_REPORT, DEMO_HVI, formatWon, getStatusColor } from "@/lib/demo-data";
 
-interface FeatureProps {
-  icon: React.ReactNode;
-  label: string;
-  title: string;
-  desc: string;
-  cta: string;
-  href: string;
-  mockup: React.ReactNode;
-  reverse?: boolean;
-  bg: string;
-}
-
-function FeatureBlock({ icon, label, title, desc, cta, href, mockup, reverse, bg }: FeatureProps) {
-  return (
-    <div className={bg}>
-      <div
-        className={`mx-auto flex max-w-6xl flex-col items-center gap-12 px-4 py-20 md:py-28 lg:flex-row lg:gap-20 ${
-          reverse ? "lg:flex-row-reverse" : ""
-        }`}
-      >
-        <SlideIn from={reverse ? "right" : "left"} className="flex-1 space-y-5">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#FF6B35]/10">
-              {icon}
-            </div>
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#FF6B35]">
-              {label}
-            </span>
-          </div>
-          <h3 className="text-2xl font-bold text-[#1A1A1A] md:text-3xl lg:text-[2rem] lg:leading-snug">
-            {title}
-          </h3>
-          <p className="max-w-md text-base leading-relaxed text-[#6B7280]">
-            {desc}
-          </p>
-          <Link
-            href={href}
-            className="inline-flex items-center gap-1 text-sm font-semibold text-[#FF6B35] transition hover:gap-2"
-          >
-            {cta} <span>→</span>
-          </Link>
-        </SlideIn>
-
-        <SlideIn from={reverse ? "left" : "right"} delay={0.15} className="w-full flex-1">
-          {mockup}
-        </SlideIn>
-      </div>
-    </div>
-  );
-}
-
-/* ─── Mockups ─── */
-
-function IntevityMockup() {
-  return (
-    <div className="rounded-2xl border border-black/5 bg-white p-6 shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl">
-      <div className="mb-4 flex items-center gap-2">
-        <span className="text-2xl">🎨</span>
-        <span className="text-xs font-bold uppercase tracking-wider text-[#FF6B35]">색감 취향</span>
-      </div>
-      <p className="text-base font-semibold text-[#1A1A1A]">끌리는 공간 분위기는?</p>
-      <div className="mt-4 space-y-2.5">
-        {["화이트/그레이 — 깔끔한 무채색", "우드톤 — 따뜻한 자연 느낌", "컬러 포인트 — 나만의 개성"].map(
-          (opt, i) => (
-            <div
-              key={opt}
-              className={`rounded-xl border-2 px-4 py-3 text-sm transition-all ${
-                i === 1
-                  ? "border-[#FF6B35] bg-[#FF6B35]/5 font-medium text-[#1A1A1A]"
-                  : "border-gray-100 text-[#6B7280] hover:border-[#FF6B35]/30"
-              }`}
-            >
-              {opt}
-            </div>
-          )
-        )}
-      </div>
-      <div className="mt-5 h-1.5 rounded-full bg-gray-100">
-        <div className="h-1.5 w-[60%] rounded-full bg-gradient-to-r from-[#FF6B35] to-amber-400" />
-      </div>
-      <p className="mt-1.5 text-right text-xs text-[#9CA3AF]">9 / 15</p>
-    </div>
-  );
-}
-
-function AuditMockup() {
-  const items = DEMO_AUDIT_REPORT.processes.slice(0, 4);
-  return (
-    <div className="rounded-2xl border border-black/5 bg-white p-6 shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl">
-      <div className="mb-4 flex items-center justify-between">
-        <span className="text-sm font-bold text-[#1A1A1A]">공정별 비교</span>
-        <span className="rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-bold text-amber-700">WARN</span>
-      </div>
-      <div className="space-y-2.5">
-        {items.map((p) => {
-          const sc = getStatusColor(p.status);
-          return (
-            <div key={p.name} className="flex items-center gap-3 rounded-lg bg-[#FAFAF9] px-3 py-2.5">
-              <span className="w-14 shrink-0 text-xs font-medium text-[#1A1A1A]">{p.name}</span>
-              <div className="flex-1">
-                <AnimatedBar percent={p.percentile} color={sc.bar} />
-              </div>
-              <span className="font-mono text-xs text-[#9CA3AF]">P{p.percentile}</span>
-              <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${sc.bg} ${sc.text}`}>{p.status}</span>
-            </div>
-          );
-        })}
-      </div>
-      <p className="mt-3 text-[10px] text-[#9CA3AF]">{DEMO_AUDIT_REPORT.data_source}</p>
-    </div>
-  );
-}
-
-function HviMockup() {
-  return (
-    <div className="rounded-2xl border border-black/5 bg-white p-6 shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl">
-      <div className="grid grid-cols-3 gap-3">
-        <div className="rounded-xl bg-[#FF6B35]/5 p-3 text-center">
-          <p className="text-xs text-[#9CA3AF]">HVI</p>
-          <p className="text-lg font-bold text-[#FF6B35]">+{formatWon(DEMO_HVI.hvi)}</p>
-        </div>
-        <div className="rounded-xl bg-[#FAFAF9] p-3 text-center">
-          <p className="text-xs text-[#9CA3AF]">ROI</p>
-          <p className="text-lg font-bold text-[#1A1A1A]">{DEMO_HVI.roi}%</p>
-        </div>
-        <div className="rounded-xl bg-[#FAFAF9] p-3 text-center">
-          <p className="text-xs text-[#9CA3AF]">LII</p>
-          <p className="text-lg font-bold text-[#1A1A1A]">{DEMO_HVI.lii}등급</p>
-        </div>
-      </div>
-      <div className="mt-4 space-y-2.5">
-        {DEMO_HVI.processRoi.slice(0, 4).map((p) => (
-          <div key={p.name} className="flex items-center gap-3">
-            <span className="w-14 text-xs font-medium text-[#6B7280]">{p.name}</span>
-            <div className="flex-1 h-2 rounded-full bg-gray-100">
-              <div className="h-2 rounded-full bg-gradient-to-r from-[#FF6B35] to-amber-400" style={{ width: `${p.roi}%` }} />
-            </div>
-            <span className="w-10 text-right font-mono text-xs text-[#6B7280]">{p.roi}%</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ChatMockup() {
-  return (
-    <div className="rounded-2xl border border-black/5 bg-white p-6 shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl">
-      <div className="space-y-3">
-        <div className="flex justify-end">
-          <div className="rounded-2xl rounded-br-sm bg-[#F3F4F6] px-4 py-2.5 text-sm text-[#1A1A1A]">
-            32평 올수리 보통 얼마야?
-          </div>
-        </div>
-        <div className="flex justify-start">
-          <div className="max-w-[85%] rounded-2xl rounded-bl-sm border-l-2 border-[#FF6B35] bg-white px-4 py-2.5 text-sm text-[#374151] shadow-sm">
-            32평 올수리(창호 포함, 확장 미포함) 기준 직접공사비 P50은 약 3,914만원입니다.
-            <span className="mt-1.5 flex items-center gap-1 text-[10px] text-[#9CA3AF]">
-              📊 시장 450건 기준
-            </span>
-          </div>
-        </div>
-      </div>
-      <div className="mt-4 flex flex-wrap gap-2">
-        {["타일 브랜드 추천", "목공사 기간은?", "확장공사 장단점"].map((q) => (
-          <span key={q} className="rounded-full border border-gray-200 px-3 py-1.5 text-xs text-[#6B7280] transition hover:border-[#FF6B35]/30 hover:text-[#FF6B35]">
-            {q}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
+/* Picasso: bento grid with irregular sizes, each card is a world */
 
 export default function FeatureShowcase() {
   return (
-    <div id="features">
-      <FeatureBlock
-        icon={<Sparkles className="h-4 w-4 text-[#FF6B35]" />}
-        label="Personality"
-        title="15가지 질문으로 나의 인테리어 DNA를 분석합니다"
-        desc="공간감각, 색감 취향, 생활 루틴까지 분석하여 6가지 스타일 중 맞춤 스타일과 우선 투자 공간을 추천합니다."
-        cta="무료 분석 시작"
-        href="/intevity"
-        mockup={<IntevityMockup />}
-        bg="bg-white"
-      />
-      <FeatureBlock
-        icon={<ClipboardCheck className="h-4 w-4 text-[#FF6B35]" />}
-        label="Audit"
-        title="받은 견적서가 적정한지 시장 데이터로 검증합니다"
-        desc="견적서를 업로드하면 17개 공정별로 시장 데이터와 비교하여 백분위 위치, 누락 공정, 리스크를 분석합니다."
-        cta="견적서 분석하기"
-        href="/audit"
-        mockup={<AuditMockup />}
-        reverse
-        bg="bg-[#FAFAF9]"
-      />
-      <FeatureBlock
-        icon={<TrendingUp className="h-4 w-4 text-[#FF6B35]" />}
-        label="Home Value"
-        title="리모델링 후 예상 집값 상승과 ROI를 계산합니다"
-        desc="국토부 실거래가와 공정별 ROI 데이터를 기반으로 투자 대비 예상 집값 상승을 분석합니다."
-        cta="집값 분석 보기"
-        href="/hvi"
-        mockup={<HviMockup />}
-        bg="bg-white"
-      />
-      <FeatureBlock
-        icon={<MessageCircle className="h-4 w-4 text-[#FF6B35]" />}
-        label="AI Consultant"
-        title="인테리어 전문가 수준의 AI에게 자유롭게 질문하세요"
-        desc="9,610건 인테리어 지식 데이터를 학습한 AI가 자재, 공정, 시공 방법까지 답변합니다."
-        cta="AI 상담 시작"
-        href="/chat"
-        mockup={<ChatMockup />}
-        reverse
-        bg="bg-[#FAFAF9]"
-      />
-    </div>
+    <section id="features" className="bg-[#FAFAF9] px-6 py-28 md:py-36">
+      <div className="mx-auto max-w-6xl">
+        <FadeIn>
+          <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-[#FF6B35]/60">
+            Features
+          </p>
+          <h2 className="mt-4 text-[clamp(1.75rem,4vw,3rem)] font-black leading-[1.1] tracking-tight text-neutral-900">
+            네 가지 도구.
+          </h2>
+        </FadeIn>
+
+        {/* Irregular bento grid */}
+        <div className="mt-14 grid gap-4 md:grid-cols-12 md:grid-rows-2">
+
+          {/* 성향분석 — tall left */}
+          <FadeIn delay={0.1} className="md:col-span-5 md:row-span-2">
+            <Link href="/intevity" className="group block h-full">
+              <div className="relative flex h-full flex-col overflow-hidden rounded-3xl bg-neutral-950 p-8 transition-all group-hover:scale-[1.01]">
+                <span className="absolute -right-6 bottom-0 text-[12rem] font-black leading-none text-white/[0.03]">性</span>
+                <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#FF6B35]">Personality</p>
+                <h3 className="mt-4 text-2xl font-bold leading-snug text-white">
+                  15가지 질문으로
+                  <br />나의 인테리어
+                  <br />DNA를 발견
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-white/40">
+                  공간감각, 색감 취향, 생활 루틴을 분석하여 6가지 스타일 중 당신에게 맞는 스타일을 추천합니다.
+                </p>
+                {/* Mini quiz preview */}
+                <div className="mt-auto pt-8">
+                  <div className="space-y-2">
+                    {["화이트 — 무채색", "우드톤 — 자연", "컬러 — 개성"].map((o, i) => (
+                      <div key={o} className={`rounded-xl border px-3 py-2 text-xs ${
+                        i === 1 ? "border-[#FF6B35]/40 bg-[#FF6B35]/10 text-white" : "border-white/[0.06] text-white/30"
+                      }`}>{o}</div>
+                    ))}
+                  </div>
+                  <div className="mt-3 h-1 rounded-full bg-white/[0.06]">
+                    <div className="h-1 w-[60%] rounded-full bg-[#FF6B35]" />
+                  </div>
+                </div>
+                <span className="mt-6 text-xs text-white/30 transition group-hover:text-[#FF6B35]">시작하기 →</span>
+              </div>
+            </Link>
+          </FadeIn>
+
+          {/* 견적서 감사 — wide top right */}
+          <FadeIn delay={0.15} className="md:col-span-7">
+            <Link href="/audit" className="group block">
+              <div className="relative overflow-hidden rounded-3xl border border-neutral-100 bg-white p-8 transition-all group-hover:shadow-xl">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#FF6B35]">Audit</p>
+                    <h3 className="mt-3 text-xl font-bold text-neutral-900">
+                      받은 견적서, 3분 만에 검증
+                    </h3>
+                    <p className="mt-2 max-w-xs text-sm text-neutral-500">
+                      17개 공정별 시장 백분위 위치, 누락 공정, 리스크를 분석합니다.
+                    </p>
+                  </div>
+                  <span className="text-xs text-neutral-300 transition group-hover:text-[#FF6B35]">→</span>
+                </div>
+                {/* Inline mini report */}
+                <div className="mt-6 space-y-1.5">
+                  {DEMO_AUDIT_REPORT.processes.slice(0, 4).map((p) => {
+                    const sc = getStatusColor(p.status);
+                    return (
+                      <div key={p.name} className="flex items-center gap-2">
+                        <span className="w-10 text-[10px] font-medium text-neutral-400">{p.name.replace("공사","")}</span>
+                        <div className="flex-1"><AnimatedBar percent={p.percentile} color={sc.bar} className="h-1" /></div>
+                        <span className={`rounded px-1.5 py-0.5 text-[8px] font-bold ${sc.bg} ${sc.text}`}>{p.status}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </Link>
+          </FadeIn>
+
+          {/* 집값분석 — bottom left of right section */}
+          <FadeIn delay={0.2} className="md:col-span-4">
+            <Link href="/hvi" className="group block">
+              <div className="relative overflow-hidden rounded-3xl bg-[#FF6B35] p-8 transition-all group-hover:scale-[1.02]">
+                <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/60">Home Value</p>
+                <h3 className="mt-3 text-xl font-bold text-white">집값 분석</h3>
+                <div className="mt-6 flex items-baseline gap-1">
+                  <span className="font-mono text-4xl font-black text-white">+{formatWon(DEMO_HVI.hvi)}</span>
+                </div>
+                <p className="mt-1 text-xs text-white/50">예상 집값 상승</p>
+                <div className="mt-4 flex gap-4">
+                  <div>
+                    <span className="font-mono text-lg font-bold text-white/90">{DEMO_HVI.roi}%</span>
+                    <p className="text-[9px] text-white/40">ROI</p>
+                  </div>
+                  <div>
+                    <span className="font-mono text-lg font-bold text-white/90">{DEMO_HVI.lii}</span>
+                    <p className="text-[9px] text-white/40">LII</p>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </FadeIn>
+
+          {/* AI 상담 — bottom right */}
+          <FadeIn delay={0.25} className="md:col-span-3">
+            <Link href="/chat" className="group block h-full">
+              <div className="flex h-full flex-col rounded-3xl border border-neutral-100 bg-white p-8 transition-all group-hover:shadow-xl">
+                <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#FF6B35]">AI Chat</p>
+                <h3 className="mt-3 text-lg font-bold text-neutral-900">물어보세요</h3>
+                {/* Mini chat */}
+                <div className="mt-auto space-y-2 pt-6">
+                  <div className="ml-auto w-fit rounded-xl bg-neutral-100 px-3 py-1.5 text-[10px] text-neutral-600">
+                    32평 올수리 얼마야?
+                  </div>
+                  <div className="w-fit rounded-xl border-l-2 border-[#FF6B35] bg-white px-3 py-1.5 text-[10px] text-neutral-500 shadow-sm">
+                    P50 기준 약 3,914만원
+                  </div>
+                </div>
+                <span className="mt-4 text-xs text-neutral-300 transition group-hover:text-[#FF6B35]">→</span>
+              </div>
+            </Link>
+          </FadeIn>
+        </div>
+      </div>
+    </section>
   );
 }

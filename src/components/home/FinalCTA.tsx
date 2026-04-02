@@ -3,30 +3,26 @@
 import Link from "next/link";
 import { FadeIn } from "@/components/shared/motion";
 
+/* Picasso: stark, almost empty, one bold gesture */
+
 export default function FinalCTA() {
   return (
-    <section className="bg-[#0A0A0B] px-4 py-24 md:py-32">
-      <FadeIn className="mx-auto max-w-2xl text-center">
-        <h2 className="text-3xl font-bold text-white md:text-4xl">
-          지금 무료로 견적서를
-          <br />
-          분석해보세요
+    <section className="relative overflow-hidden bg-[#0A0A0B] px-6 py-28 md:py-40">
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <div className="h-[400px] w-[400px] rounded-full bg-[#FF6B35]/[0.05] blur-[120px]" />
+      </div>
+
+      <FadeIn className="relative z-10 mx-auto max-w-3xl text-center">
+        <h2 className="text-[clamp(1.75rem,5vw,3.5rem)] font-black leading-[1.1] tracking-tight text-white">
+          지금 바로.
         </h2>
-        <p className="mt-4 text-[#6B7280]">
-          회원가입 없이 바로 사용할 수 있습니다
-        </p>
-        <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <p className="mt-4 text-white/30">회원가입 없이. 무료로.</p>
+        <div className="mt-12">
           <Link
             href="/audit"
-            className="inline-flex items-center justify-center rounded-xl bg-[#FF6B35] px-8 py-4 text-base font-semibold text-white transition-all hover:shadow-lg hover:shadow-[#FF6B35]/25"
+            className="inline-flex rounded-full bg-[#FF6B35] px-10 py-4 text-base font-semibold text-white transition-all hover:shadow-[0_0_60px_rgba(255,107,53,0.3)]"
           >
             견적서 분석하기
-          </Link>
-          <Link
-            href="/intevity"
-            className="inline-flex items-center justify-center rounded-xl border border-white/10 px-8 py-4 text-base font-medium text-gray-400 transition-all hover:border-[#FF6B35]/40 hover:text-white"
-          >
-            성향분석 시작
           </Link>
         </div>
       </FadeIn>
