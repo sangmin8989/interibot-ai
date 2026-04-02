@@ -80,7 +80,7 @@ export default function AuditPage() {
                     <div key={p.name} className="space-y-1.5">
                       <div className="flex items-baseline justify-between">
                         <span className="text-[12px] text-[#1A1A1A]/40">{p.name}</span>
-                        <span className={`text-[10px] ${p.status === "PASS" ? "text-[#1A1A1A]/45" : p.status === "WARN" ? "text-[#C68A2E]" : "text-[#C44B3F]"}`}>{p.status}</span>
+                        <span className={`text-[10px] ${p.status === "PASS" ? "text-[#1A1A1A]/45" : p.status === "WARN" ? "text-[#C9A96E]" : "text-black/60"}`}>{p.status}</span>
                       </div>
                       <AnimatedBar percent={p.percentile} color={sc.bar} />
                     </div>
@@ -113,7 +113,7 @@ export default function AuditPage() {
             ) : (
               <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                 <FileUpload onUploadComplete={handleUpload} isLoading={isLoading} />
-                {error && <p className="mt-4 text-[12px] text-[#C44B3F]">{error}</p>}
+                {error && <p className="mt-4 text-[12px] text-black/60">{error}</p>}
               </motion.div>
             )}
           </AnimatePresence>

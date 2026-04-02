@@ -157,7 +157,7 @@ export default function HviPage() {
             >
               {isLoading ? "분석 중..." : "분석하기"}
             </button>
-            {error && <p className="text-[12px] text-[#C44B3F]">{error}</p>}
+            {error && <p className="text-[12px] text-black/60">{error}</p>}
           </div>
         </div>
       </section>

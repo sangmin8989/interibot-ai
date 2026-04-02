@@ -72,7 +72,7 @@ export default function Home() {
               </div>
               <div className="border-t border-black/[0.04] px-5 py-2.5 md:px-6">
                 {DEMO_AUDIT_REPORT.warnings.map((w) => (
-                  <p key={w} className="text-[11px] text-amber-600">⚠ {w}</p>
+                  <p key={w} className="text-[11px] text-[#C9A96E]">⚠ {w}</p>
                 ))}
               </div>
             </div>
@@ -142,7 +142,7 @@ export default function Home() {
                       <div key={p.name} className="space-y-1">
                         <div className="flex justify-between">
                           <span className="text-[11px] text-black/50">{p.name}</span>
-                          <span className={`text-[9px] font-medium ${p.status === "PASS" ? "text-emerald-600" : "text-amber-600"}`}>{p.status}</span>
+                          <span className={`text-[9px] font-medium ${p.status === "PASS" ? "text-black/40" : "text-[#C9A96E]"}`}>{p.status}</span>
                         </div>
                         <AnimatedBar percent={p.percentile} color={sc.bar} />
                       </div>

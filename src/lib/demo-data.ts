@@ -48,9 +48,9 @@ export function formatWon(amount: number): string {
 
 export function getStatusColor(status: string) {
   switch (status) {
-    case "PASS": return { bg: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-200", bar: "bg-emerald-500" };
-    case "WARN": return { bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200", bar: "bg-amber-500" };
-    case "BLOCK": return { bg: "bg-red-50", text: "text-red-700", border: "border-red-200", bar: "bg-red-500" };
-    default: return { bg: "bg-gray-50", text: "text-gray-700", border: "border-gray-200", bar: "bg-gray-500" };
+    case "PASS": return { bg: "bg-black/[0.03]", text: "text-black/40", border: "border-black/5", bar: "bg-[#C9A96E]" };
+    case "WARN": return { bg: "bg-[#C9A96E]/10", text: "text-[#C9A96E]", border: "border-[#C9A96E]/20", bar: "bg-[#C9A96E]" };
+    case "BLOCK": return { bg: "bg-black/[0.06]", text: "text-black/70", border: "border-black/10", bar: "bg-black/60" };
+    default: return { bg: "bg-black/[0.03]", text: "text-black/40", border: "border-black/5", bar: "bg-black/20" };
   }
 }
