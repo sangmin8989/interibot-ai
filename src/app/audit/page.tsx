@@ -56,19 +56,19 @@ export default function AuditPage() {
   return (
     <div className="min-h-screen bg-white">
       <section className="px-6 pt-28 pb-20 md:pt-36">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-2xl text-center">
           <FadeIn>
             <p className="text-[10px] tracking-[0.4em] text-[#1A1A1A]/50">AUDIT</p>
-            <h1 className="mt-6 max-w-lg font-serif text-[clamp(1.75rem,4vw,3rem)] font-light leading-[1.3] text-[#1A1A1A]">
+            <h1 className="mt-6 font-serif text-[clamp(1.5rem,3vw,2.25rem)] font-light leading-[1.4] text-[#1A1A1A]">
               받으신 견적서,<br />기준 위에 올려보겠습니다.
             </h1>
-            <p className="mt-6 max-w-md text-[14px] leading-[1.9] text-[#1A1A1A]/35">
+            <p className="mt-6 text-[14px] leading-[1.9] text-[#1A1A1A]/35">
               각 공정이 시장의 어디에 위치하는지, 빠진 항목은 없는지. 데이터가 보여드립니다.
             </p>
           </FadeIn>
 
           {/* Demo */}
-          <FadeIn delay={0.2} className="mt-16 max-w-lg">
+          <FadeIn delay={0.2} className="mt-12 text-left">
             <div className="overflow-hidden rounded-sm border border-[#1A1A1A]/[0.06] bg-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.06)]">
               <div className="border-b border-[#1A1A1A]/[0.04] px-6 py-4">
                 <p className="text-[10px] tracking-[0.3em] text-[#1A1A1A]/45">SAMPLE</p>
@@ -90,8 +90,8 @@ export default function AuditPage() {
             </div>
           </FadeIn>
 
-          <FadeIn delay={0.4} className="mt-10">
-            <button onClick={() => formRef.current?.scrollIntoView({ behavior: "smooth" })} className="border-b border-[#1A1A1A]/15 pb-0.5 text-[12px] text-[#1A1A1A]/30 transition hover:border-[#1A1A1A] hover:text-[#1A1A1A]">
+          <FadeIn delay={0.4} className="mt-10 text-center">
+            <button onClick={() => formRef.current?.scrollIntoView({ behavior: "smooth" })} className="border-b border-[#1A1A1A]/15 pb-0.5 text-[12px] text-[#1A1A1A]/40 transition hover:border-[#1A1A1A] hover:text-[#1A1A1A]">
               견적서 올리기 ↓
             </button>
           </FadeIn>
