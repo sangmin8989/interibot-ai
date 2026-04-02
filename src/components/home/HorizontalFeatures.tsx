@@ -63,9 +63,11 @@ export default function HorizontalFeatures() {
           scrollTrigger: {
             trigger: container,
             pin: true,
+            pinSpacing: true,
             scrub: 1,
             end: `+=${totalScroll}`,
             invalidateOnRefresh: true,
+            anticipatePin: 1,
           },
         });
       });
@@ -96,7 +98,7 @@ export default function HorizontalFeatures() {
                 <p className="mt-4 max-w-sm text-[14px] leading-[2] text-white/30">{f.desc}</p>
                 <Link
                   href={f.href}
-                  className="mt-6 inline-block border-b border-white/15 pb-0.5 text-[11px] tracking-[0.1em] text-white/40 transition-all duration-500 hover:border-white hover:text-white"
+                  className="relative z-10 mt-6 inline-block border-b border-white/15 px-1 py-2 pb-1 text-[11px] tracking-[0.1em] text-white/40 transition-all duration-500 hover:border-white hover:text-white"
                 >
                   시작하기
                 </Link>

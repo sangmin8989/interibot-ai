@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
+// Mouse position is tracked from the parent container via window mousemove
+// Canvas itself is pointer-events-none so it never blocks clicks
 export default function DisplacementCanvas({ className = "" }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: 0.5, y: 0.5, targetX: 0.5, targetY: 0.5 });
@@ -18,16 +20,12 @@ export default function DisplacementCanvas({ className = "" }: { className?: str
     const vert = `
       attribute vec2 a_pos;
       varying vec2 v_uv;
-      void main() {
-        v_uv = a_pos * 0.5 + 0.5;
-        gl_Position = vec4(a_pos, 0.0, 1.0);
-      }
+      void main() { v_uv = a_pos * 0.5 + 0.5; gl_Position = vec4(a_pos, 0.0, 1.0); }
     `;
     const frag = `
       precision mediump float;
       uniform float u_time;
       uniform vec2 u_mouse;
-      uniform vec2 u_res;
       varying vec2 v_uv;
       void main() {
         vec2 uv = v_uv;
@@ -63,10 +61,7 @@ export default function DisplacementCanvas({ className = "" }: { className?: str
 
     const uTime = gl.getUniformLocation(prog, "u_time");
     const uMouse = gl.getUniformLocation(prog, "u_mouse");
-    const uRes = gl.getUniformLocation(prog, "u_res");
-
     gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.uniform2f(uRes, canvas.width, canvas.height);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
@@ -77,7 +72,6 @@ export default function DisplacementCanvas({ className = "" }: { className?: str
       const m = mouseRef.current;
       m.x += (m.targetX - m.x) * 0.05;
       m.y += (m.targetY - m.y) * 0.05;
-
       gl!.uniform1f(uTime, (Date.now() - start) / 1000);
       gl!.uniform2f(uMouse, m.x, 1.0 - m.y);
       gl!.drawArrays(gl!.TRIANGLE_STRIP, 0, 4);
@@ -85,23 +79,28 @@ export default function DisplacementCanvas({ className = "" }: { className?: str
     }
     render();
 
+    // Listen on window so pointer-events-none doesn't matter
     const handleMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
-      mouseRef.current.targetX = (e.clientX - rect.left) / rect.width;
-      mouseRef.current.targetY = (e.clientY - rect.top) / rect.height;
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+      if (x >= 0 && x <= 1 && y >= 0 && y <= 1) {
+        mouseRef.current.targetX = x;
+        mouseRef.current.targetY = y;
+      }
     };
-    canvas.addEventListener("mousemove", handleMove);
+    window.addEventListener("mousemove", handleMove, { passive: true });
 
     return () => {
       cancelAnimationFrame(raf);
-      canvas.removeEventListener("mousemove", handleMove);
+      window.removeEventListener("mousemove", handleMove);
     };
   }, []);
 
   return (
     <canvas
       ref={canvasRef}
-      className={`pointer-events-auto absolute inset-0 z-10 h-full w-full ${className}`}
+      className={`pointer-events-none absolute inset-0 z-10 h-full w-full ${className}`}
     />
   );
 }

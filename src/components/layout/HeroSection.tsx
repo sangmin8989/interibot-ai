@@ -134,7 +134,7 @@ export default function HeroSection() {
               <MagneticButton strength={0.25}>
                 <Link
                   href="/audit"
-                  className="border-b border-black pb-1 text-[12px] font-medium tracking-[0.1em] text-black transition-all duration-500 hover:border-[#C9A96E] hover:text-[#C9A96E]"
+                  className="inline-block border-b border-black px-2 py-2 pb-1 text-[12px] font-medium tracking-[0.1em] text-black transition-all duration-500 hover:border-[#C9A96E] hover:text-[#C9A96E]"
                 >
                   견적서 분석
                 </Link>
@@ -142,7 +142,7 @@ export default function HeroSection() {
               <MagneticButton strength={0.2}>
                 <Link
                   href="/intevity"
-                  className="text-[12px] tracking-[0.1em] text-black/40 transition-colors duration-500 hover:text-black/70"
+                  className="inline-block px-2 py-2 text-[12px] tracking-[0.1em] text-black/40 transition-colors duration-500 hover:text-black/70"
                 >
                   성향분석
                 </Link>
