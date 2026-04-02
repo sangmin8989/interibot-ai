@@ -2,143 +2,105 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { DEMO_AUDIT_REPORT, formatWon, getStatusColor } from "@/lib/demo-data";
-import { AnimatedBar } from "@/components/shared/motion";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
+/* Chanel: black & white. Gold whisper. Typography IS the hero. Nothing else. */
+
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#FAF9F7]">
-      <div className="pointer-events-none absolute right-0 top-0 h-[60vh] w-[40vw] bg-gradient-to-bl from-[#FF6B35]/[0.03] to-transparent" />
+    <section className="relative flex min-h-screen items-center overflow-hidden bg-white">
+      {/* Subtle geometric line pattern — Chanel tweed texture */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.015]"
+        style={{
+          backgroundImage: `repeating-linear-gradient(0deg, #000 0px, #000 1px, transparent 1px, transparent 40px),
+                            repeating-linear-gradient(90deg, #000 0px, #000 1px, transparent 1px, transparent 40px)`,
+        }}
+      />
 
-      <div className="mx-auto max-w-6xl px-6 pt-40 lg:pt-48">
-        <div className="grid items-start gap-20 lg:grid-cols-12">
-          <motion.div
-            className="lg:col-span-7"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1.4, ease }}
-          >
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2, duration: 1, ease }}
-              className="text-[11px] tracking-[0.4em] text-[#1A1A1A]/25"
-            >
-              INFORMED DECISIONS
-            </motion.p>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 1.2, ease }}
-              className="mt-8 font-serif"
-            >
-              <span className="block text-[clamp(2.5rem,6vw,4.5rem)] font-extralight leading-[1.1] tracking-tight text-[#1A1A1A]">
-                인테리어에도
-              </span>
-              <span className="block text-[clamp(2.5rem,6vw,4.5rem)] font-bold leading-[1.1] tracking-tight text-[#1A1A1A]">
-                안목이 필요합니다.
-              </span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8, duration: 1, ease }}
-              className="mt-10 max-w-md text-[15px] leading-[1.9] text-[#1A1A1A]/35"
-            >
-              121,515건의 시장 데이터가 만든 기준.
-              <br />
-              견적서를 읽는 눈을 드립니다.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.2, duration: 1, ease }}
-              className="mt-14 flex items-center gap-8"
-            >
-              <Link
-                href="/audit"
-                className="border-b border-[#1A1A1A] pb-1 text-[13px] font-medium tracking-wide text-[#1A1A1A] transition-all duration-500 hover:border-[#FF6B35] hover:text-[#FF6B35]"
-              >
-                견적서 분석
-              </Link>
-              <Link
-                href="/intevity"
-                className="text-[13px] tracking-wide text-[#1A1A1A]/25 transition-colors duration-500 hover:text-[#1A1A1A]/50"
-              >
-                성향분석
-              </Link>
-            </motion.div>
-          </motion.div>
-
-          {/* Report */}
-          <motion.div
-            className="lg:col-span-5"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 1.4, ease }}
-          >
-            <div className="overflow-hidden rounded-sm border border-[#1A1A1A]/[0.06] bg-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)]">
-              <div className="border-b border-[#1A1A1A]/[0.04] px-6 py-4">
-                <p className="text-[10px] tracking-[0.3em] text-[#1A1A1A]/25">AUDIT REPORT</p>
-                <p className="mt-1 font-serif text-sm text-[#1A1A1A]">{DEMO_AUDIT_REPORT.apartment}</p>
-              </div>
-              <div className="px-6 py-4">
-                <div className="space-y-4">
-                  {DEMO_AUDIT_REPORT.processes.map((p, i) => {
-                    const sc = getStatusColor(p.status);
-                    return (
-                      <motion.div
-                        key={p.name}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 1 + i * 0.1, duration: 0.8, ease }}
-                        className="space-y-1.5"
-                      >
-                        <div className="flex items-baseline justify-between">
-                          <span className="text-[12px] text-[#1A1A1A]/60">{p.name}</span>
-                          <div className="flex items-baseline gap-3">
-                            <span className="font-mono text-[11px] text-[#1A1A1A]/25">{formatWon(p.amount)}</span>
-                            <span className={`text-[10px] font-medium ${
-                              p.status === "PASS" ? "text-[#1A1A1A]/25" : p.status === "WARN" ? "text-[#C68A2E]" : "text-[#C44B3F]"
-                            }`}>{p.status}</span>
-                          </div>
-                        </div>
-                        <AnimatedBar percent={p.percentile} color={sc.bar} />
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="border-t border-[#1A1A1A]/[0.04] px-6 py-3">
-                <p className="text-[10px] text-[#1A1A1A]/15">{DEMO_AUDIT_REPORT.data_source}</p>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-6">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.8, duration: 1, ease }}
-          className="mt-32 border-t border-[#1A1A1A]/[0.04] pt-6 pb-20"
+          transition={{ duration: 1.6, ease }}
+          className="text-center"
         >
-          <div className="flex gap-16">
-            <div>
-              <span className="font-mono text-[11px] text-[#1A1A1A]/15">121,515</span>
-              <span className="ml-2 text-[10px] text-[#1A1A1A]/10">데이터</span>
-            </div>
-            <div>
-              <span className="font-mono text-[11px] text-[#1A1A1A]/15">450</span>
-              <span className="ml-2 text-[10px] text-[#1A1A1A]/10">사례</span>
-            </div>
-            <div>
-              <span className="font-mono text-[11px] text-[#1A1A1A]/15">17</span>
-              <span className="ml-2 text-[10px] text-[#1A1A1A]/10">공정</span>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 1, ease }}
+            className="text-[10px] font-medium tracking-[0.5em] text-[#C9A96E]"
+          >
+            INTERIBOT AI
+          </motion.p>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 1.2, ease }}
+            className="mt-10 font-serif"
+          >
+            <span className="block text-[clamp(2rem,5.5vw,4.5rem)] font-extralight leading-[1.15] tracking-tight text-black">
+              인테리어에도
+            </span>
+            <span className="block text-[clamp(2rem,5.5vw,4.5rem)] font-black leading-[1.15] tracking-tight text-black">
+              안목이 필요합니다.
+            </span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.0, duration: 1, ease }}
+            className="mx-auto mt-10 max-w-sm text-[14px] leading-[2] text-black/30"
+          >
+            121,515건의 시장 데이터가 만든 기준.
+            <br />
+            견적서를 읽는 눈을 드립니다.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.4, duration: 1, ease }}
+            className="mt-16 flex items-center justify-center gap-10"
+          >
+            <Link
+              href="/audit"
+              className="border-b border-black pb-1 text-[12px] font-medium tracking-[0.1em] text-black transition-all duration-500 hover:border-[#C9A96E] hover:text-[#C9A96E]"
+            >
+              견적서 분석
+            </Link>
+            <Link
+              href="/intevity"
+              className="text-[12px] tracking-[0.1em] text-black/20 transition-colors duration-500 hover:text-black/50"
+            >
+              성향분석
+            </Link>
+          </motion.div>
+        </motion.div>
+
+        {/* Bottom — thin gold line + data */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2, duration: 1, ease }}
+          className="absolute bottom-12 left-6 right-6"
+        >
+          <div className="mx-auto max-w-6xl">
+            <div className="h-[0.5px] bg-[#C9A96E]/20" />
+            <div className="mt-4 flex gap-12">
+              {[
+                { n: "121,515", l: "데이터" },
+                { n: "450", l: "사례" },
+                { n: "17", l: "공정" },
+              ].map((d) => (
+                <div key={d.n} className="flex items-baseline gap-1.5">
+                  <span className="font-mono text-[10px] text-black/15">{d.n}</span>
+                  <span className="text-[9px] text-black/10">{d.l}</span>
+                </div>
+              ))}
             </div>
           </div>
         </motion.div>

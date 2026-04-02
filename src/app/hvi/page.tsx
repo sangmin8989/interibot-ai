@@ -41,7 +41,7 @@ export default function HviPage() {
 
   if (result) {
     return (
-      <div className="min-h-screen bg-[#FAF9F7] pt-20">
+      <div className="min-h-screen bg-white pt-20">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease }} className="mx-auto max-w-3xl space-y-10 px-6 py-16">
           <div>
             <p className="text-[10px] tracking-[0.4em] text-[#1A1A1A]/25">RESULT</p>
@@ -55,7 +55,7 @@ export default function HviPage() {
           </div>
           <div className="flex justify-center gap-8 pt-6">
             <button onClick={() => setResult(null)} className="text-[12px] text-[#1A1A1A]/25 transition hover:text-[#1A1A1A]/50">다시 분석</button>
-            <Link href="/chat" className="border-b border-[#1A1A1A] pb-0.5 text-[12px] text-[#1A1A1A] transition hover:border-[#FF6B35] hover:text-[#FF6B35]">상담하기</Link>
+            <Link href="/chat" className="border-b border-[#1A1A1A] pb-0.5 text-[12px] text-[#1A1A1A] transition hover:border-[#C9A96E] hover:text-[#C9A96E]">상담하기</Link>
           </div>
         </motion.div>
       </div>
@@ -63,7 +63,7 @@ export default function HviPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF9F7]">
+    <div className="min-h-screen bg-white">
       <section className="px-6 pt-28 pb-20 md:pt-36">
         <div className="mx-auto max-w-5xl">
           <FadeIn>
@@ -117,7 +117,7 @@ export default function HviPage() {
             <button
               onClick={handleAnalyze}
               disabled={isLoading}
-              className="w-full border-b border-[#1A1A1A] pb-1 text-center text-[13px] font-medium text-[#1A1A1A] transition-all duration-500 hover:border-[#FF6B35] hover:text-[#FF6B35] disabled:border-[#1A1A1A]/10 disabled:text-[#1A1A1A]/15"
+              className="w-full border-b border-[#1A1A1A] pb-1 text-center text-[13px] font-medium text-[#1A1A1A] transition-all duration-500 hover:border-[#C9A96E] hover:text-[#C9A96E] disabled:border-[#1A1A1A]/10 disabled:text-[#1A1A1A]/15"
             >
               {isLoading ? "분석 중..." : "분석하기"}
             </button>

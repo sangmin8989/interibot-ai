@@ -25,7 +25,7 @@ export default function ChatUI() {
   };
 
   return (
-    <div className="flex h-screen flex-col bg-[#FAF9F7] pt-14">
+    <div className="flex h-screen flex-col bg-white pt-14">
       <div className="flex-1 overflow-y-auto px-6 py-8">
         {messages.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center">

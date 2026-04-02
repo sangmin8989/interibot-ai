@@ -31,7 +31,7 @@ export default function FileUpload({ onUploadComplete, isLoading }: Props) {
           onDragLeave={() => setDrag(false)}
           onDrop={(e) => { e.preventDefault(); setDrag(false); const f = e.dataTransfer.files[0]; if (f) setFile(f); }}
           className={`mt-4 cursor-pointer border py-16 text-center transition-all duration-500 ${
-            drag ? "border-[#FF6B35]/30 bg-[#FF6B35]/[0.02]" : file ? "border-[#1A1A1A]/10" : "border-[#1A1A1A]/[0.06] hover:border-[#1A1A1A]/10"
+            drag ? "border-[#C9A96E]/30 bg-[#C9A96E]/[0.02]" : file ? "border-[#1A1A1A]/10" : "border-[#1A1A1A]/[0.06] hover:border-[#1A1A1A]/10"
           }`}
         >
           {file ? (
@@ -95,7 +95,7 @@ export default function FileUpload({ onUploadComplete, isLoading }: Props) {
       <button
         onClick={() => file && onUploadComplete({ estimateFile: file, floorplanFile: floorplan || undefined, apartmentName: apartment || undefined, areaPy: areaPy ? Number(areaPy) : undefined, region: region || undefined })}
         disabled={!file || isLoading}
-        className="w-full border-b border-[#1A1A1A] pb-1 text-center text-[13px] font-medium text-[#1A1A1A] transition-all duration-500 hover:border-[#FF6B35] hover:text-[#FF6B35] disabled:border-[#1A1A1A]/10 disabled:text-[#1A1A1A]/20"
+        className="w-full border-b border-[#1A1A1A] pb-1 text-center text-[13px] font-medium text-[#1A1A1A] transition-all duration-500 hover:border-[#C9A96E] hover:text-[#C9A96E] disabled:border-[#1A1A1A]/10 disabled:text-[#1A1A1A]/20"
       >
         {isLoading ? "분석 중..." : "분석하기"}
       </button>

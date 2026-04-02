@@ -45,7 +45,7 @@ export default function AuditPage() {
 
   if (report) {
     return (
-      <div className="min-h-screen bg-[#FAF9F7] pt-24">
+      <div className="min-h-screen bg-white pt-24">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, ease }} className="mx-auto max-w-3xl px-6 py-12">
           <AuditReportView report={report} />
         </motion.div>
@@ -54,7 +54,7 @@ export default function AuditPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF9F7]">
+    <div className="min-h-screen bg-white">
       <section className="px-6 pt-28 pb-20 md:pt-36">
         <div className="mx-auto max-w-6xl">
           <FadeIn>

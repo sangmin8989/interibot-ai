@@ -1,26 +1,21 @@
 import Link from "next/link";
 
-/* Hermès: understated. A hallmark, not a billboard. */
-
 export default function Footer() {
   return (
-    <footer className="border-t border-[#1A1A1A]/[0.04] bg-[#FAF9F7] px-6 py-12">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8 md:flex-row md:items-center md:justify-between">
-        <div>
-          <span className="font-serif text-[13px] text-[#1A1A1A]/40">인테리봇</span>
-          <p className="mt-1 text-[10px] text-[#1A1A1A]/15">아르젠 스튜디오 &copy; 2026</p>
+    <footer className="border-t border-black/[0.04] bg-white px-6 py-10">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        <div className="flex items-baseline gap-3">
+          <span className="text-[11px] font-bold tracking-[0.15em] text-black/40">INTERIBOT</span>
+          <span className="text-[9px] text-black/15">&copy; 2026 아르젠 스튜디오</span>
         </div>
         <div className="flex gap-8">
           {[
-            { label: "성향분석", href: "/intevity" },
-            { label: "감사", href: "/audit" },
-            { label: "집값", href: "/hvi" },
-            { label: "상담", href: "/chat" },
-            { label: "이용약관", href: "#" },
-            { label: "개인정보", href: "#" },
-          ].map((l) => (
-            <Link key={l.label} href={l.href} className="text-[10px] text-[#1A1A1A]/15 transition-colors duration-500 hover:text-[#1A1A1A]/40">
-              {l.label}
+            { l: "성향분석", h: "/intevity" }, { l: "감사", h: "/audit" },
+            { l: "집값", h: "/hvi" }, { l: "상담", h: "/chat" },
+            { l: "이용약관", h: "#" }, { l: "개인정보", h: "#" },
+          ].map((i) => (
+            <Link key={i.l} href={i.h} className="text-[9px] tracking-[0.05em] text-black/15 transition-colors duration-500 hover:text-black/40">
+              {i.l}
             </Link>
           ))}
         </div>

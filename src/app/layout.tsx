@@ -39,7 +39,7 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;400;700;900&display=swap"
         />
       </head>
-      <body className="flex min-h-full flex-col bg-[#FAF9F7] font-pretendard text-[#1A1A1A] antialiased">
+      <body className="flex min-h-full flex-col bg-white font-pretendard text-black antialiased">
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

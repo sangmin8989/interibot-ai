@@ -18,7 +18,7 @@ export default function MessageBubble({ message }: { message: UIMessage }) {
 
   return (
     <div className="flex justify-start">
-      <div className="max-w-[80%] border-l border-[#FF6B35]/20 pl-5">
+      <div className="max-w-[80%] border-l border-[#C9A96E]/20 pl-5">
         {text.split("\n").map((line, i) => (
           <p key={i} className={`text-[14px] leading-[1.8] text-[#1A1A1A] ${line === "" ? "h-3" : ""}`}>
             {line}
