@@ -8,9 +8,9 @@ import { motion, AnimatePresence } from "framer-motion";
 const ease = [0.16, 1, 0.3, 1] as const;
 const nav = [
   { label: "성향분석", href: "/intevity" },
-  { label: "감사", href: "/audit" },
-  { label: "집값", href: "/hvi" },
-  { label: "상담", href: "/chat" },
+  { label: "견적서 감사", href: "/audit" },
+  { label: "집값 분석", href: "/hvi" },
+  { label: "AI 상담", href: "/chat" },
 ];
 
 export default function Navbar() {
@@ -25,72 +25,95 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Top bar */}
-      <nav className={`fixed top-0 z-50 w-full transition-all duration-700 ${
-        scrolled ? "border-b border-black/[0.04] bg-white/90 backdrop-blur-2xl" : "bg-transparent"
+      <header className={`sticky left-0 top-0 z-[100] w-full transition-all duration-500 ${
+        scrolled ? "border-b border-black/[0.04] bg-white/90 backdrop-blur-xl" : "bg-white"
       }`}>
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
-          <Link href="/" className="text-[13px] font-bold tracking-[0.15em] text-black">
+        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 lg:px-6">
+          <Link href="/" className="text-sm font-bold tracking-[0.12em] text-black">
             INTERIBOT
           </Link>
 
-          <div className="hidden items-center gap-8 md:flex">
+          {/* Desktop nav */}
+          <div className="hidden items-center gap-8 lg:flex">
             {nav.map((i) => (
-              <Link key={i.href} href={i.href} className="text-[11px] tracking-[0.1em] text-black/55 transition-colors duration-500 hover:text-black">
+              <Link key={i.href} href={i.href} className="text-xs text-black/50 transition-colors hover:text-black">
                 {i.label}
               </Link>
             ))}
           </div>
 
-          <button onClick={() => setOpen(!open)} className="text-black/40 md:hidden">
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {/* Mobile hamburger */}
+          <button
+            onClick={() => setOpen(!open)}
+            className="flex h-9 w-9 items-center justify-center rounded-lg bg-black/[0.04] transition lg:hidden"
+          >
+            {open ? <X className="h-4 w-4 text-black/60" /> : <Menu className="h-4 w-4 text-black/60" />}
           </button>
         </div>
-      </nav>
+      </header>
 
-      {/* Mobile bottom CTA bar — always visible on scroll */}
+      {/* Mobile floating panel (archisketch style) */}
+      <AnimatePresence>
+        {open && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[99] bg-black/10 lg:hidden"
+              onClick={() => setOpen(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2, ease }}
+              className="fixed left-[2dvw] right-[2dvw] top-20 z-[100] overflow-hidden rounded-xl bg-white shadow-2xl lg:hidden"
+            >
+              {/* CTA */}
+              <div className="border-b border-black/[0.04] p-3">
+                <Link
+                  href="/audit"
+                  onClick={() => setOpen(false)}
+                  className="flex h-12 w-full items-center justify-center rounded-lg bg-black text-sm font-semibold text-white active:scale-[0.97]"
+                >
+                  견적서 분석하기
+                </Link>
+              </div>
+              {/* Nav links */}
+              <div className="p-3">
+                {nav.map((i) => (
+                  <Link
+                    key={i.href}
+                    href={i.href}
+                    onClick={() => setOpen(false)}
+                    className="block rounded-lg px-3 py-3.5 text-sm font-medium text-black/70 active:bg-black/[0.03]"
+                  >
+                    {i.label}
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile bottom CTA bar */}
       <AnimatePresence>
         {scrolled && (
           <motion.div
             initial={{ y: 100 }}
             animate={{ y: 0 }}
             exit={{ y: 100 }}
-            transition={{ duration: 0.4, ease }}
-            className="fixed bottom-0 z-50 w-full border-t border-black/[0.04] bg-white/95 px-6 py-3 backdrop-blur-xl md:hidden"
+            transition={{ duration: 0.3, ease }}
+            className="fixed bottom-0 z-50 w-full border-t border-black/[0.04] bg-white/95 px-4 py-2.5 backdrop-blur-xl lg:hidden"
           >
             <Link
               href="/audit"
-              className="block rounded-sm bg-black py-3 text-center text-[12px] font-medium tracking-[0.1em] text-white active:scale-[0.98]"
+              className="flex h-12 w-full items-center justify-center rounded-lg bg-black text-sm font-semibold text-white active:scale-[0.97]"
             >
               견적서 분석하기
             </Link>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Fullscreen menu */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, ease }}
-            className="fixed inset-0 z-[60] flex flex-col bg-white md:hidden"
-          >
-            <div className="flex h-14 items-center justify-between px-6">
-              <span className="text-[13px] font-bold tracking-[0.15em]">INTERIBOT</span>
-              <button onClick={() => setOpen(false)}><X className="h-5 w-5 text-black/40" /></button>
-            </div>
-            <div className="flex flex-1 flex-col justify-center px-6">
-              {nav.map((i, idx) => (
-                <motion.div key={i.href} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.06, ease }}>
-                  <Link href={i.href} onClick={() => setOpen(false)} className="block border-b border-black/[0.04] py-6 font-serif text-2xl font-light text-black">
-                    {i.label}
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
           </motion.div>
         )}
       </AnimatePresence>
