@@ -27,7 +27,7 @@ const styleRules: StyleRule[] = [
       if (s.T09_color <= 40) score += 25;
       if (s.T05_organization >= 70) score += 20;
       if (s.T10_lighting >= 65) score += 15;
-      if (s.T04_organization >= 65) score += 10;
+      if (s.T04_cleaning >= 65) score += 10;
       if (s.T08_budget >= 60) score += 10;
       return score;
     },
@@ -66,7 +66,7 @@ const styleRules: StyleRule[] = [
     match: (s) => {
       let score = 0;
       if (s.T05_organization >= 75) score += 25;
-      if (s.T04_organization >= 75) score += 20;
+      if (s.T04_cleaning >= 75) score += 20;
       if (s.T09_color <= 35) score += 15;
       if (s.T01_space <= 50) score += 10;
       return score;

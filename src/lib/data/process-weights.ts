@@ -26,9 +26,9 @@ const weightRules: WeightRule[] = [
   // T02 시각민감도 → 도장공사 (마감 품질)
   { trait: "T02_sensitivity", threshold: 70, process: "도장공사", weight: 5, reason: "마감 품질 향상" },
   // T03 청각민감도 → 창호공사 (방음)
-  { trait: "T03_cleaning", threshold: 70, process: "창호공사", weight: 10, reason: "이중창 방음 효과" },
+  { trait: "T03_noise", threshold: 70, process: "창호공사", weight: 10, reason: "이중창 방음 효과" },
   // T04 청소성향 → 필름공사 (관리 용이)
-  { trait: "T04_organization", threshold: 70, process: "필름공사", weight: 5, reason: "관리 편의 마감" },
+  { trait: "T04_cleaning", threshold: 70, process: "필름공사", weight: 5, reason: "관리 편의 마감" },
   // T05 정리정돈 → 가구공사 (붙박이장)
   { trait: "T05_organization", threshold: 60, process: "가구공사", weight: 12, reason: "맞춤 수납장 필요" },
   // T06 가족구성 → 가구공사 (안전 수납)
@@ -129,10 +129,10 @@ export function recommendProcesses(scores: ProfileScore): ProcessRecommendation[
 export function getSpacePriority(scores: ProfileScore): { space: string; score: number }[] {
   const spaces = [
     { space: "거실", score: scores.T01_space * 0.3 + scores.T13_movement * 0.3 + (100 - scores.T05_organization) * 0.2 },
-    { space: "주방", score: scores.T15_hobby * 0.3 + scores.T04_organization * 0.2 + scores.T06_family * 0.2 },
-    { space: "욕실", score: scores.T12_discomfort * 0.3 + scores.T04_organization * 0.2 + scores.T07_health * 0.2 },
-    { space: "침실", score: scores.T14_sleep * 0.4 + scores.T02_sensitivity * 0.2 + scores.T03_cleaning * 0.1 },
-    { space: "수납", score: scores.T05_organization * 0.4 + scores.T06_family * 0.2 + scores.T04_organization * 0.1 },
+    { space: "주방", score: scores.T15_hobby * 0.3 + scores.T04_cleaning * 0.2 + scores.T06_family * 0.2 },
+    { space: "욕실", score: scores.T12_discomfort * 0.3 + scores.T04_cleaning * 0.2 + scores.T07_health * 0.2 },
+    { space: "침실", score: scores.T14_sleep * 0.4 + scores.T02_sensitivity * 0.2 + scores.T03_noise * 0.1 },
+    { space: "수납", score: scores.T05_organization * 0.4 + scores.T06_family * 0.2 + scores.T04_cleaning * 0.1 },
     { space: "현관", score: scores.T02_sensitivity * 0.2 + scores.T12_discomfort * 0.2 },
   ];
 

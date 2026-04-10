@@ -3,7 +3,24 @@ import { geminiFlash } from "@/lib/gemini/client";
 import { SYSTEM_PROMPT } from "@/lib/prompts/system";
 
 export async function POST(request: Request) {
-  const { messages } = await request.json();
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return new Response(JSON.stringify({ error: "잘못된 요청 형식입니다." }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const { messages } = body as { messages?: unknown };
+
+  if (!Array.isArray(messages) || messages.length === 0) {
+    return new Response(JSON.stringify({ error: "메시지가 필요합니다." }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 
   // UIMessage (parts 형식) → ModelMessage (content 형식) 변환
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

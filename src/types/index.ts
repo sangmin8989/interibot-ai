@@ -23,7 +23,13 @@ export const STANDARD_PROCESSES = [
 
 export type ProcessName = (typeof STANDARD_PROCESSES)[number];
 
+// ── Legacy (deprecated, kept for HVI compatibility) ──
 export type Verdict = "PASS" | "WARN" | "BLOCK";
+
+// ── New analysis types ──
+export type RangePosition = "below" | "within" | "upper" | "above";
+export type ProcessCriticality = "critical" | "standard" | "optional";
+export type ConfidenceLevel = "high" | "moderate" | "low";
 
 export interface QuoteItem {
   processName: string;
@@ -31,6 +37,7 @@ export interface QuoteItem {
   materialName?: string;
   quantity?: number;
   unitPrice?: number;
+  amountUnit?: "won" | "man_won" | "cheon_won";
 }
 
 export interface ExtractedQuote {
@@ -40,6 +47,47 @@ export interface ExtractedQuote {
   area?: number;
 }
 
+export interface ProcessContext {
+  possibleReasons: string[];
+  suggestedQuestion: string;
+  confidence: ConfidenceLevel;
+  sampleCount: number;
+}
+
+export interface AnalysisItem {
+  processName: string;
+  userAmount: number;
+  rangeLow: number;   // P25
+  rangeHigh: number;  // P75
+  median: number;     // P50
+  position: RangePosition;
+  positionRatio: number; // 0-1, where on the visual scale
+  context: ProcessContext;
+  source: string;
+}
+
+export interface MissingProcess {
+  processName: string;
+  criticality: ProcessCriticality;
+  reason: string;
+}
+
+export interface AnalysisReport {
+  items: AnalysisItem[];
+  missingProcesses: MissingProcess[];
+  totalAmount: number;
+  totalRangeLow: number;
+  totalRangeHigh: number;
+  totalMedian: number;
+  perPyeongCost: number;
+  typicalPerPyeongRange: [number, number];
+  processRatios: { processName: string; ratio: number }[];
+  overallConfidence: ConfidenceLevel;
+  sampleBasis: string;
+  disclaimer: string;
+}
+
+// ── Legacy interfaces (kept for backward compatibility) ──
 export interface AuditItem {
   processName: string;
   userAmount: number;
@@ -63,8 +111,8 @@ export interface AuditReport {
 export interface ProfileScore {
   T01_space: number;        // 공간감각
   T02_sensitivity: number;  // 시각민감도
-  T03_cleaning: number;     // 청각민감도 (방음)
-  T04_organization: number; // 청소성향
+  T03_noise: number;        // 청각민감도 (방음)
+  T04_cleaning: number;     // 청소성향
   T05_organization: number; // 정리정돈습관
   T06_family: number;       // 가족구성
   T07_health: number;       // 건강요소
@@ -84,7 +132,28 @@ export type StyleType =
   | "클래식"
   | "미니멀"
   | "스칸디"
-  | "빈티지";
+  | "빈티지"
+  | "북유럽"
+  | "인더스트리얼"
+  | "레트로"
+  | "로맨틱"
+  | "프렌치"
+  | "컨템포러리"
+  | "재팬디";
+
+// 11개 스타일 ID (영문)
+export type IntevityStyleId =
+  | "modern"
+  | "minimal"
+  | "scandinavian"
+  | "classic"
+  | "natural"
+  | "industrial"
+  | "retro"
+  | "romantic"
+  | "french"
+  | "contemporary"
+  | "japandi";
 
 export interface StyleMatch {
   primaryStyle: StyleType;

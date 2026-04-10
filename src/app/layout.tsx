@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import LenisProvider from "@/components/shared/LenisProvider";
 import ScrollProgress from "@/components/shared/ScrollProgress";
+import KakaoScript from "@/components/shared/KakaoScript";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -14,7 +15,6 @@ const geistMono = Geist_Mono({
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
 };
 
 export const metadata: Metadata = {
@@ -37,10 +37,11 @@ export default function RootLayout({
         />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;400;700;900&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;400;700;900&family=Cormorant+Garamond:wght@300;400;600;700&display=swap"
         />
       </head>
       <body className="flex min-h-full flex-col bg-white font-pretendard text-black antialiased">
+        <KakaoScript />
         <LenisProvider>
           <ScrollProgress />
           <Navbar />
