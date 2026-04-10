@@ -5,4 +5,3 @@ export const google = createGoogleGenerativeAI({
 });
 
 export const geminiFlash = google("gemini-2.5-flash");
-export const geminiPro = google("gemini-2.5-flash");

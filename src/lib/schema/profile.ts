@@ -5,8 +5,8 @@ const score = z.number().min(0).max(100);
 export const ProfileScoreSchema = z.object({
   T01_space: score,
   T02_sensitivity: score,
-  T03_cleaning: score,
-  T04_organization: score,
+  T03_noise: score,
+  T04_cleaning: score,
   T05_organization: score,
   T06_family: score,
   T07_health: score,
